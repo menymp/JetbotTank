@@ -14,8 +14,8 @@ NEGRO = (0, 0, 0)
 BLANCO = (255, 255, 255)
 
 s = socket.socket()
-#host = '10.6.12.128' # needs to be in quote
-host = '192.168.1.141'
+
+host = 'xxx.xxx.x.x'
 port = 8990 #1234
 s.connect((host, port))
  
