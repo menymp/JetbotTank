@@ -1,0 +1,2 @@
+HAL_STM32_CONTROL.c:12:6:Motor1_set	16	static
+HAL_STM32_CONTROL.c:32:6:Motor2_set	16	static
