@@ -15,13 +15,10 @@ GSTREAMER_PIPELINE = 'nvarguscamerasrc ! video/x-raw(memory:NVMM), width=640, he
 
 cap=cv2.VideoCapture(GSTREAMER_PIPELINE, cv2.CAP_GSTREAMER)
 clientsocket=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-#48cc0d6ae94c4cb3b52a298f9156ad9a
-#aio = Client('48cc0d6ae94c4cb3b52a298f9156ad9a')
 
-clientsocket.connect(("192.168.1.128",8089))
-#192.168.1.86
-#192.168.10.106
-#192.168.10.114
+
+clientsocket.connect(("######",8089))
+
 #    print "Servidor No Encontrado"
 while True:
     
