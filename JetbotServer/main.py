@@ -7,11 +7,17 @@ menymp 2023
 starts a web camera server and a websocket interface server for  command control
 '''
 import sys
+import signal
+import time
 
 from socketConnectionHandler import socketConnectionHandler
 from serialControl import serialControl
 from configsJetBotServerUtils import configsJetBotHandler
+#not yet on use, but usefull if need to know availabe serial ports on windows and linux
 from serialPortUtills import serial_ports
+
+serialObj = None
+socketConnObj = None
 
 def handleConfigs():
 	configs = loadConfigs()
@@ -61,8 +67,44 @@ def saveNewConfigs(currentConfigs, additionalArgs):
 	configsHandler.saveConfigs(currentConfigs)
 	return True
 
+def serialOpen(configs):
+	serialObj = serialControl(portPath = configs["lastSerialPortPath"], \
+						+ baudRate = configs["serialBaudRate"], timeout = configs["serialTimeout"], \
+						+ maxLen = configs["maxLen"])
+	return serialObj
+'''
+if there are aditional processing things to do or parsing from arguments
+those belong here
+
+	#ser.write(b'a,0,0#')
+	#print("detenido")
+	#time.sleep(2)
+	#ser.write(b'b,150,150#')
+	#print("adelante")
+	#time.sleep(2)
+'''
+def serialHandler(command):
+	serialObj.write(command)
+	pass
+ 
+def exitHandler(signum, frame):
+	socketConnObj.stop()
+	serialObj.serialClose()
+	exit(1)
+
 if __name__ == "__main__":
-	print(handleConfigs())
+	#sets the exit ctrl c signal
+	signal.signal(signal.SIGINT, exitHandler)
+	#obtains the current configs
+	configs = handleConfigs()
+	#opens serial controller
+	serialObj = serialOpen(configs)
+	#starts socket server for command handling
+	socketConnObj = socketConnectionHandler(configs, serialHandler)
+	socketConnObj.start()
+	#sleeps until end of program
+	while True:
+		time.sleep(1)
 	pass
 #this class contains the logic to handle incoming connections from controller clients
 #for now only one
@@ -105,10 +147,4 @@ while 1:
 	print(BufferIn)
 	ser.write(BufferIn.encode())
 	
-	#ser.write(b'a,0,0#')
-	#print("detenido")
-	#time.sleep(2)
-	#ser.write(b'b,150,150#')
-	#print("adelante")
-	#time.sleep(2)
 '''
