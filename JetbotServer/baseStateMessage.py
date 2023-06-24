@@ -3,7 +3,7 @@ from enum import Enum
 class state(Enum):
 	SUCCESS_TYPE = 0
 	FAILED_TYPE = 1
-	PENDING_TYPE 2
+	PENDING_TYPE = 2
 
 
 
