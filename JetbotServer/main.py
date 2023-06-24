@@ -6,15 +6,79 @@ menymp 2023
 
 starts a web camera server and a websocket interface server for  command control
 '''
-from socketServerWrapper import socketServerWrapper
+import sys
+
+from socketConnectionHandler import socketConnectionHandler
 from serialControl import serialControl
-from configsUtils import *
-from serialControl import serialControl
-from serialPortUtils import serialPortUtils
+from configsJetBotServerUtils import configsJetBotHandler
+from serialPortUtills import serial_ports
+
+def handleConfigs():
+	configs = loadConfigs()
+	newParameters = parseLineCommands()
+	saveNewConfigs(configs, newParameters)
+	return loadConfigs()
+
+def loadConfigs():
+	configsHandler = configsJetBotHandler()
+	configsObj = configsHandler.getConfigs()
+	return configsObj
+
+def parseLineCommands():	
+	#loop over each arg to build the relevant args list
+	inputParameters = {
+	}
+	for argStr in sys.argv:
+		if argStr == "main.py":
+			continue
+		argStr = argStr.replace(' ','')
+		tokens = argStr.split('=')
+		if len(tokens) != 2:
+			print("arg: '" + argStr + "' unknown format")
+			sys.exit(0)
+		inputParameters[tokens[0]] = tokens[1]
+	return inputParameters
+
+def saveNewConfigs(currentConfigs, additionalArgs):
+	#Map current configs into the object and stores it
+	# is there a better approach?? ToDo: review
+	for key, value in additionalArgs.items():
+		if key == "--host":
+			currentConfigs["lastConnectionHost"] = value
+		elif key == "--port":
+			currentConfigs["lastConnectionPort"] = int(value)
+		elif key == "--serialPath":
+			currentConfigs["lastSerialPortPath"] = value
+		elif key == "--serialTimeout":
+			currentConfigs["serialTimeout"] = int(value)
+		elif key == "--serialBaudRate":
+			currentConfigs["serialBaudRate"] = int(value)
+		elif key == "--maxLen":
+			currentConfigs["maxLen"] = int(value)
+		else:
+			print("WARNING: command '" + key + "' still not defined, ignored!")
+	configsHandler = configsJetBotHandler()
+	configsHandler.saveConfigs(currentConfigs)
+	return True
+
+if __name__ == "__main__":
+	print(handleConfigs())
+	pass
 #this class contains the logic to handle incoming connections from controller clients
 #for now only one
-class socketConnectionHandler():
+'''
+	
+	serv.start()
+	
+	for x in range(3):
+		data = serv.read(conn)
+		serv.write(conn,"received --->" + str(data))
+		time.sleep(2)
+	serv.stop()
 	pass
+'''
+
+
 
 '''
 ser = serial.Serial('/dev/ttyACM0')
