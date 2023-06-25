@@ -15,6 +15,7 @@ from serialControl import serialControl
 from configsJetBotServerUtils import configsJetBotHandler
 #not yet on use, but usefull if need to know availabe serial ports on windows and linux
 from serialPortUtills import serial_ports
+from CameraHttpServer import webcamIPServerHandle
 
 serialObj = None
 socketConnObj = None
@@ -105,6 +106,7 @@ if __name__ == "__main__":
 	#sleeps until end of program
 	while True:
 		time.sleep(1)
+		webcamIPServerHandle('',8080)
 	pass
 #this class contains the logic to handle incoming connections from controller clients
 #for now only one

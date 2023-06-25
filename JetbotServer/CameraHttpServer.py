@@ -3,6 +3,9 @@
 	Author: Igor Maculan - n3wtron@gmail.com
 	A Simple mjpg stream http server
 '''
+'''
+ToDo: a major refractor of this should be crafted
+'''
 import cv2
 from PIL import Image
 import threading
@@ -75,16 +78,13 @@ class CamHandler(BaseHTTPRequestHandler):
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 	"""Handle requests in a separate thread."""
 
-def main():
-	
+def webcamIPServerHandle(host, port):
 	objCamara = cv2.VideoCapture(GSTREAMER_PIPELINE, cv2.CAP_GSTREAMER)
 	thread_actualizar = threading.Thread(target = Actualizar, args = (objCamara,Buff_http, ))
 	thread_actualizar.start()
 	
-
-	
 	try:
-		server = ThreadedHTTPServer(('', 8080), CamHandler)
+		server = ThreadedHTTPServer((host, port), CamHandler)
 		print "server started"
 		server.serve_forever()
 	except KeyboardInterrupt:
@@ -92,4 +92,4 @@ def main():
 		server.socket.close()
 
 if __name__ == '__main__':
-	main()
+	webcamIPServerHandle('',8080)
