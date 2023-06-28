@@ -1,0 +1,4 @@
+cambiar powermode a 10 watts
+
+sudo /usr/sbin/nvpmodel -m 0
+
