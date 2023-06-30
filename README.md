@@ -23,4 +23,10 @@ Contains the needed modules configured for the current system
 - Testing with real environment.
 
 ## Future ideas and features
-- to be writen
+the idea behind this project for now is start with a base for a robot test bench, some future
+activities are lane driving, navigation and SLAM mapping. current expected sensors to be supported are:
+- Kinect v1
+- xv11 lidar
+- motors and encoders
+- GPS
+- 8 mp camera

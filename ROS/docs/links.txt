@@ -1,1 +1,3 @@
+this file contains links to some important tutorial files
+
 http://wiki.ros.org/ROS/Tutorials/WritingPublisherSubscriber%28c%2B%2B%29

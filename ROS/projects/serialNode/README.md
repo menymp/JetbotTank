@@ -1,0 +1,1 @@
+a simple serial node, borrowed from garyservin https://github.com/garyservin/serial-example
