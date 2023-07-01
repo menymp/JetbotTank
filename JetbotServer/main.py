@@ -51,11 +51,11 @@ def saveNewConfigs(currentConfigs, additionalArgs):
 	# is there a better approach?? ToDo: review
 	for key, value in additionalArgs.items():
 		if key == "--host":
-			currentConfigs["lastConnectionHost"] = value
+			currentConfigs["host"] = value
 		elif key == "--port":
-			currentConfigs["lastConnectionPort"] = int(value)
+			currentConfigs["port"] = int(value)
 		elif key == "--serialPath":
-			currentConfigs["lastSerialPortPath"] = value
+			currentConfigs["portPath"] = value
 		elif key == "--serialTimeout":
 			currentConfigs["serialTimeout"] = int(value)
 		elif key == "--serialBaudRate":
@@ -69,9 +69,8 @@ def saveNewConfigs(currentConfigs, additionalArgs):
 	return True
 
 def serialOpen(configs):
-	serialObj = serialControl(portPath = configs["lastSerialPortPath"], \
-						+ baudRate = configs["serialBaudRate"], timeout = configs["serialTimeout"], \
-						+ maxLen = configs["maxLen"])
+	serialObj = serialControl()
+	serialObj.serialOpen(configs["portPath"],configs["serialBaudRate"],configs["serialTimeout"],configs["maxLen"])
 	return serialObj
 '''
 if there are aditional processing things to do or parsing from arguments
@@ -106,7 +105,8 @@ if __name__ == "__main__":
 	#sleeps until end of program
 	while True:
 		time.sleep(1)
-		webcamIPServerHandle('',8080)
+		webcamIPServerHandle('',8087)
+	print("ends")
 	pass
 #this class contains the logic to handle incoming connections from controller clients
 #for now only one

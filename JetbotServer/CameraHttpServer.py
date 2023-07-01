@@ -6,21 +6,26 @@
 '''
 ToDo: a major refractor of this should be crafted
 '''
+'''
+ToDo: migrate to Python3
+menymp
+'''
 import cv2
 from PIL import Image
 import threading
-from BaseHTTPServer import BaseHTTPRequestHandler,HTTPServer
-from SocketServer import ThreadingMixIn
-import cStringIO
+from http.server import BaseHTTPRequestHandler,HTTPServer
+from socketserver import ThreadingMixIn
+#import cStringIO
+from io import BytesIO as cStringIO
 import os
 import time
-import Queue
+import queue
 
 capture=None
 GSTREAMER_PIPELINE = 'nvarguscamerasrc ! video/x-raw(memory:NVMM), width=640, height=480, format=(string)NV12, framerate=21/1 ! nvvidconv flip-method=0 ! video/x-raw, width=640, height=480, format=(string)BGRx ! videoconvert ! video/x-raw, format=(string)BGR ! appsink'
 
 
-Buff_http = Queue.Queue(2)
+Buff_http = queue.Queue(2)
 
 
 def Actualizar(Cam_obj,Buff_out):
@@ -43,6 +48,7 @@ class CamHandler(BaseHTTPRequestHandler):
 			self.end_headers()
 			while True:
 				try:
+					print("keh")
 					rc = True
 					
 					if not Buff_http.empty():
@@ -53,25 +59,28 @@ class CamHandler(BaseHTTPRequestHandler):
 						continue
 					imgRGB=cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
 					jpg = Image.fromarray(imgRGB)
-					tmpFile = cStringIO.StringIO()
+					tmpFile = cStringIO()
 					jpg.save(tmpFile,'JPEG')
 					tmpFile.seek(0,os.SEEK_END)
-					self.wfile.write("--jpgboundary\r\n")
+					self.wfile.write(b'--jpgboundary\r\n')
 					self.send_header('Content-type','image/jpeg')
 					self.send_header('Content-length',str(tmpFile.tell()))
 					self.end_headers()
 					jpg.save(self.wfile,'JPEG')
 					time.sleep(0.05)
+					print("ending")
 				except KeyboardInterrupt:
+					print("except")
 					break
+			print("exiting")
 			return
 		if self.path.endswith('.html'):
 			self.send_response(200)
 			self.send_header('Content-type','text/html')
 			self.end_headers()
-			self.wfile.write('<html><head></head><body>')
-			self.wfile.write('<img src="cam.mjpg"/>')
-			self.wfile.write('</body></html>')
+			self.wfile.write(b'<html><head></head><body>')
+			self.wfile.write(b'<img src="cam.mjpg"/>')
+			self.wfile.write(b'</body></html>')
 			return
 
 
@@ -79,15 +88,18 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 	"""Handle requests in a separate thread."""
 
 def webcamIPServerHandle(host, port):
-	objCamara = cv2.VideoCapture(GSTREAMER_PIPELINE, cv2.CAP_GSTREAMER)
+	#objCamara = cv2.VideoCapture(GSTREAMER_PIPELINE, cv2.CAP_GSTREAMER)
+	objCamara = cv2.VideoCapture(0) #for testing purposes, expected to use the upper line in jetson nano
 	thread_actualizar = threading.Thread(target = Actualizar, args = (objCamara,Buff_http, ))
 	thread_actualizar.start()
 	
 	try:
 		server = ThreadedHTTPServer((host, port), CamHandler)
-		print "server started"
+		print("server started")
 		server.serve_forever()
+		print("server stops")
 	except KeyboardInterrupt:
+		print("server error")
 		capture.release()
 		server.socket.close()
 

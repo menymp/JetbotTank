@@ -26,7 +26,7 @@ class socketConnectionHandler():
 		if self.handleSocketTask is not None:
 			print("warning!! a thread already started for this, restarting")
 			self.stop()
-		self.handleSocketTask = Thread(self._serverTaskHandler)
+		self.handleSocketTask = Thread(target = self._serverTaskHandler)
 		self.handleSocketTask.start()
 		pass
 	
@@ -36,7 +36,8 @@ class socketConnectionHandler():
 		pass
 		
 	def _serverTaskHandler(self):
-		conn, addr  = serv.acceptConn()
+		self.serv.start()
+		conn, addr  = self.serv.acceptConn()
 		while(self.stopEvent.is_set() == False):
 			self.messageReceivedHandler(serv.read(conn))
 		pass

@@ -8,7 +8,7 @@ import json
 from pathlib import Path
 
 class baseConfigs():
-	DEFAULT_PATH = ""
+	DEFAULT_PATH = "./configsJetBot.json"
 	DEFAULT_CONFIGS_STRUCT = {
 	}
 	
@@ -17,7 +17,6 @@ class baseConfigs():
 			spath = self.DEFAULT_PATH
 		else:
 			spath = path
-		
 		with open(spath) as f:
 			data = json.load(f)
 		return data

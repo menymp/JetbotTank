@@ -1,7 +1,7 @@
 {
-    "lastConnectionHost": "",
-    "lastConnectionPort": 8990,
-    "lastSerialPortPath": "/dev/ttyACM0",
+    "host": "",
+    "port": 8990,
+    "portPath": "COM1",
     "serialTimeout": 0.07,
     "serialBaudRate": 9600,
     "maxLen": 50
