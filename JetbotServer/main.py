@@ -16,6 +16,7 @@ from configsJetBotServerUtils import configsJetBotHandler
 #not yet on use, but usefull if need to know availabe serial ports on windows and linux
 from serialPortUtills import serial_ports
 from CameraHttpServer import webcamIPServerHandle
+from cameraServerController import videoHandler
 
 serialObj = None
 socketConnObj = None
@@ -105,7 +106,10 @@ if __name__ == "__main__":
 	#sleeps until end of program
 	while True:
 		time.sleep(1)
-		webcamIPServerHandle('',8087)
+		#webcamIPServerHandle('',8087) #old logic from 2018, unsuccessfully ported to python3
+		#new logic with Tornado 6
+		videoHandlerObj = videoHandler()
+		videoHandlerObj.serverListen()
 	print("ends")
 	pass
 #this class contains the logic to handle incoming connections from controller clients
