@@ -34,9 +34,9 @@ class videoFeedHandler(tornado.web.RequestHandler):
 		
 		img = self.videoService.getJpg()
 		
-		self.write(my_boundary)
-		self.write("Content-type: image/jpeg\r\n")
-		self.write("Content-length: %s\r\n\r\n" % len(img))
+		#self.write(my_boundary)
+		#self.write("Content-type: image/jpeg\r\n")
+		#self.write("Content-length: %s\r\n\r\n" % len(img))
 		self.write(img)
 		
 		self.flush()

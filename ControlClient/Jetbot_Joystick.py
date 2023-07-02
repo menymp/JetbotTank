@@ -3,7 +3,9 @@ menymp 24 jun 2023
 
 software to create a control client for the jetbot with a joystick
 '''
-
+import numpy as np
+import urllib.request as request
+import cv2
 import sys
 sys.path.append("../JetbotServer")
 
@@ -48,9 +50,11 @@ def mapCommands(currentConfigs, additionalArgs):
 		if key == "--mode":
 			currentConfigs["joystickMode"] = value
 		elif key == "--host":
-			currentConfigs["host"] = int(value)
+			currentConfigs["host"] = value
 		elif key == "--port":
-			currentConfigs["port"] = value
+			currentConfigs["port"] = int(value)
+		elif key == "--videoPort":
+			currentConfigs["videoPort"] = int(value)
 		else:
 			print("WARNING: command '" + key + "' still not defined, ignored!")
 	return currentConfigs
@@ -118,6 +122,17 @@ def tankMode(cmdObj):
 def carMode(cmdObj):
 	return str
 
+def url_to_image(url):
+	resp = request.urlopen(url)
+	image = cv2.imdecode(np.frombuffer(resp.read(), np.uint8), 1)
+	return image
+
+def displayCamera(configs):
+	window_name = 'camera'
+	jpgVideoEndpoint = currentConfigs["host"] + ":" + str(currentConfigs["videoPort"]) + "/video_feed")
+	cv2.imshow(window_name, url_to_image(jpgVideoEndpoint))
+	cv2.waitKey(1)
+
 #ToDo: add the single joystick mapper for the single joystick mode
 
 if __name__ == "__main__":
@@ -131,5 +146,8 @@ if __name__ == "__main__":
 		if(exitSignal):
 			break
 		userValuesMap(socketClient, configs, userCmds)
+		displayCamera(configs)
+	# closing all open windows
+	cv2.destroyAllWindows()
 	socketClient.close()
 	pass
