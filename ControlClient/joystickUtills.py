@@ -28,9 +28,9 @@ class TextPrint(object):
         self.y_pos = 10
         self.font = pygame.font.Font(None, 20)
  
-    def print(self, mi_self.fscreen, text_string):
-        textBitmap = self.font.render(text_string, True, self.BLACK)
-        mi_self.fscreen.blit(textBitmap, [self.x, self.y])
+    def print(self, fscreen, text_string):
+        textBitmap = self.font.render(text_string, True, BLACK)
+        fscreen.blit(textBitmap, [self.x, self.y])
         self.y += self.line_height
          
     def reset(self):
@@ -45,7 +45,7 @@ class TextPrint(object):
         self.x -= 10
      
 
-class uiPygameJetbot()
+class uiPygameJetbot():
 	def pygameInit(self):
 		pygame.init()
 		# resolution init
@@ -53,7 +53,7 @@ class uiPygameJetbot()
 		self.fscreen = pygame.display.set_mode(screenRes)
 		pygame.display.set_caption("Jetbot controller")
 		# Lo usamos para gestionar cuan rapido de refresca la self.fscreen.
-		self.reloj = pygame.time.Clock()
+		self.clk = pygame.time.Clock()
 		# Inicializa los joysticks
 		pygame.joystick.init()
 		# Se prepara para imprimir
@@ -77,7 +77,7 @@ class uiPygameJetbot()
 	def clearScreens(self):
 		# Drawing cleanup
 		self.fscreen.fill(WHITE)
-		text_print.reset()
+		self.text_print.reset()
 		# joystick count
 	
 	#For future functions enabling
@@ -116,19 +116,18 @@ class uiPygameJetbot()
 		}
 		joystickResponse["id"] = joystickId
 		for axisId in range(axisCount):
-			axisValue = joystick.get_axis(i)
-            oystickResponse["axis" + str(axisId)] = joystick.get_axis(i)
-			self.text_print.print(pantalla, "axis {} value: {:>6.3f}".format(axisId, axisValue))
+			axisValue = joystick.get_axis(axisId)
+			joystickResponse["axis" + str(axisId)] = joystick.get_axis(axisId)
+			self.text_print.print(self.fscreen, "axis {} value: {:>6.3f}".format(axisId, axisValue))
+		#time.sleep(0.2)
 		return joystickResponse
-        time.sleep(0.2)
-	
 	
 	def loop(self):
-		handleJoystickEvent()
+		self.handleJoystickEvent()
 		
-		clearScreens()
-		joysticksCount = getJoysticks()
-		printJoystickNum(joysticksCount)
+		self.clearScreens()
+		joysticksCount = self.getJoysticks()
+		self.printJoystickNum(joysticksCount)
 		
 		joysticksStates = []
 		#for each joystick
@@ -136,26 +135,27 @@ class uiPygameJetbot()
 			joystick = pygame.joystick.Joystick(idJoystick)
 			joystick.init()
 			 
-			text_print.print(self.fscreen, "Joystick {}".format(idJoystick) )
-			text_print.indent()
+			self.text_print.print(self.fscreen, "Joystick {}".format(idJoystick) )
+			self.text_print.indent()
 			 
 			# get joystick name
-			text_print.print(self.fscreen, "joystick name: {}".format(joystick.get_name()))
+			self.text_print.print(self.fscreen, "joystick name: {}".format(joystick.get_name()))
 			
 			# axis goes in pairs, up/down and left/right for the other.
 			axisCount = joystick.get_numaxes()
-			text_print.print(self.fscreen, "joystick count: {}".format(axisCount))
-			text_print.indent()
+			print("axis count: " + str(axisCount))
+			self.text_print.print(self.fscreen, "joystick count: {}".format(axisCount))
+			self.text_print.indent()
 			
 			#builds the current axis state for each detected joystick
-			response = self.buildJoystickResponses(joystick , axisCount, idJoystick)
+			response = self.buildJoystickResponses(axisCount, joystick , idJoystick)
 			joysticksStates.append(response)
 			self.text_print.unindent()
-			time.sleep(0.2)
+			#time.sleep(0.2)
 		pygame.display.flip()
 		
 		# limits to 60 fps.
-		clk.tick(60)
+		self.clk.tick(60)
 		return joysticksStates, self.quitSignal
 	
 	def close(self):

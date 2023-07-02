@@ -39,5 +39,5 @@ class socketConnectionHandler():
 		self.serv.start()
 		conn, addr  = self.serv.acceptConn()
 		while(self.stopEvent.is_set() == False):
-			self.messageReceivedHandler(serv.read(conn))
+			self.messageReceivedHandler(self.serv.read(conn))
 		pass

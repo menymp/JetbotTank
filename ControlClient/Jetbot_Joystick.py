@@ -1,6 +1,7 @@
 '''
 menymp 24 jun 2023
-
+example use for now:
+python Jetbot_Joystick.py --mode=tank --host=IP --port=8990 --videoPort=9090
 software to create a control client for the jetbot with a joystick
 '''
 import numpy as np
@@ -10,7 +11,7 @@ import sys
 sys.path.append("../JetbotServer")
 
 from socketServerWrapper import socketClientW
-
+from joystickUtills import uiPygameJetbot
 '''
 s = socket.socket()
 
@@ -61,6 +62,7 @@ def mapCommands(currentConfigs, additionalArgs):
 
 def initSocketClient(configs):
 	client = socketClientW()
+	#print(configs)
 	client.connect(configs['host'], configs['port'])
 	return client
 
@@ -77,7 +79,7 @@ def userValuesMap(socketObj, configs, userCmds):
 		print("ERROR: '" + mode + "' is not defined!")
 		sys.exit(1)
 	
-	socketObj.send(mappedStr.encode("utf-8"))
+	socketObj.send(mappedStr) #by default encode to utf-8
 	return True
 
 def tankMode(cmdObj):
@@ -87,19 +89,19 @@ def tankMode(cmdObj):
 	POWER_M1 = 0
 	POWER_M2 = 0
 	
-	for key, value in additionalArgs.items():
+	for key, value in cmdObj.items():
 		if key == "axis1":
-			POWER_M2 = int(abs(eje*253))
-			if(eje < 0):
+			POWER_M2 = int(abs(value*253))
+			if(value < 0):
 				#valor menor que 0
 				Dir2 = 'r'
 			else:
 				#valor mayor que 0
 				Dir2 = 'f'
-		elif key == "axis3":
+		elif key == "axis4":
 			#valor del segundo eje
-			POWER_M1 = int(abs(eje*253))
-			if(eje < 0):
+			POWER_M1 = int(abs(value*253))
+			if(value < 0):
 				#valor menor que 0
 				Dir1 = 'r'
 			else:
@@ -129,7 +131,7 @@ def url_to_image(url):
 
 def displayCamera(configs):
 	window_name = 'camera'
-	jpgVideoEndpoint = currentConfigs["host"] + ":" + str(currentConfigs["videoPort"]) + "/video_feed")
+	jpgVideoEndpoint = "http://"+configs["host"] + ":" + str(configs["videoPort"]) + "/video_feed"
 	cv2.imshow(window_name, url_to_image(jpgVideoEndpoint))
 	cv2.waitKey(1)
 

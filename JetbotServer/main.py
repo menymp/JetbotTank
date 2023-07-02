@@ -85,6 +85,7 @@ those belong here
 	#time.sleep(2)
 '''
 def serialHandler(command):
+	print(command)
 	serialObj.write(command)
 	pass
  
