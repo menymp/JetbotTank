@@ -87,27 +87,29 @@ def tankMode(cmdObj):
 	CMD = ''
 	Dir1 = 'f'
 	Dir2 = 'f'
+	rawValP1 = 0
+	rawValP2 = 0
 	POWER_M1 = 0
 	POWER_M2 = 0
 	
 	for key, value in cmdObj.items():
-		if key == "axis1":
-			POWER_M2 = int(abs(value*253))
-			if(value < 0):
-				#valor menor que 0
-				Dir2 = 'r'
-			else:
-				#valor mayor que 0
-				Dir2 = 'f'
+		if key == "axis3":
+			rawValP1 = value
 		elif key == "axis4":
-			#valor del segundo eje
-			POWER_M1 = int(abs(value*253))
-			if(value < 0):
-				#valor menor que 0
-				Dir1 = 'r'
-			else:
-				#valor mayor que 0
-				Dir1 = 'f'
+			rawValP2 = value
+	leftP,rightP = singleJoystickTransform(rawValP1,rawValP2)
+	POWER_M1 = int(abs(leftP*253))
+	POWER_M2 = int(abs(rightP*253))
+	
+	if(leftP < 0):
+		Dir1 = 'r'
+	else:
+		Dir1 = 'f'
+	
+	if(rightP < 0):
+		Dir2 = 'r'
+	else:
+		Dir2 = 'f'
 	
 	if(Dir1 == 'f' and Dir2 == 'f'):
 		CMD = 'c' + ',' + str(POWER_M1)+','+str(POWER_M2)+'#'
@@ -119,8 +121,8 @@ def tankMode(cmdObj):
 		CMD = 'b' + ',' + str(POWER_M1)+','+str(POWER_M2)+'#'
 	
 	#print(CMD)
-	#l,r = singleJoystickTransform()
-	#print("single mode: " + )
+	
+	#print("L R: " + str(leftP) + " " + str(rightP))
 	#s.send(CMD.encode("utf-8"))
 	return CMD
 
@@ -178,4 +180,5 @@ if __name__ == "__main__":
 	# closing all open windows
 	cv2.destroyAllWindows()
 	socketClient.close()
+	print("bye")
 	pass

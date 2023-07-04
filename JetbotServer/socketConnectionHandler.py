@@ -33,11 +33,18 @@ class socketConnectionHandler():
 	def stop(self):
 		self.stopEvent.set()
 		self.serv.stop()
+		print("exit")
 		pass
 		
 	def _serverTaskHandler(self):
 		self.serv.start()
-		conn, addr  = self.serv.acceptConn()
 		while(self.stopEvent.is_set() == False):
-			self.messageReceivedHandler(self.serv.read(conn))
+			print("Server listening for connection!")
+			conn, addr  = self.serv.acceptConn()
+			print("connection received from: " + str(addr))
+			while True:
+				recv = self.serv.read(conn)
+				if not recv:
+					break
+				self.messageReceivedHandler(recv)
 		pass

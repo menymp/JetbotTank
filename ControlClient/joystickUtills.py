@@ -123,42 +123,46 @@ class uiPygameJetbot():
 		return joystickResponse
 	
 	def loop(self):
-		self.handleJoystickEvent()
-		
-		self.clearScreens()
-		joysticksCount = self.getJoysticks()
-		self.printJoystickNum(joysticksCount)
-		
-		joysticksStates = []
-		#for each joystick
-		for idJoystick in range(joysticksCount):
-			joystick = pygame.joystick.Joystick(idJoystick)
-			joystick.init()
-			 
-			self.text_print.print(self.fscreen, "Joystick {}".format(idJoystick) )
-			self.text_print.indent()
-			 
-			# get joystick name
-			self.text_print.print(self.fscreen, "joystick name: {}".format(joystick.get_name()))
+		try:
+			self.handleJoystickEvent()
 			
-			# axis goes in pairs, up/down and left/right for the other.
-			axisCount = joystick.get_numaxes()
-			print("axis count: " + str(axisCount))
-			self.text_print.print(self.fscreen, "joystick count: {}".format(axisCount))
-			self.text_print.indent()
+			self.clearScreens()
+			joysticksCount = self.getJoysticks()
+			self.printJoystickNum(joysticksCount)
 			
-			#builds the current axis state for each detected joystick
-			response = self.buildJoystickResponses(axisCount, joystick , idJoystick)
-			joysticksStates.append(response)
-			self.text_print.unindent()
-			#time.sleep(0.2)
-		pygame.display.flip()
-		
-		# limits to 60 fps.
-		self.clk.tick(60)
-		return joysticksStates, self.quitSignal
+			joysticksStates = []
+			#for each joystick
+			for idJoystick in range(joysticksCount):
+				joystick = pygame.joystick.Joystick(idJoystick)
+				joystick.init()
+				 
+				self.text_print.print(self.fscreen, "Joystick {}".format(idJoystick) )
+				self.text_print.indent()
+				 
+				# get joystick name
+				self.text_print.print(self.fscreen, "joystick name: {}".format(joystick.get_name()))
+				
+				# axis goes in pairs, up/down and left/right for the other.
+				axisCount = joystick.get_numaxes()
+				self.text_print.print(self.fscreen, "joystick count: {}".format(axisCount))
+				self.text_print.indent()
+				
+				#builds the current axis state for each detected joystick
+				response = self.buildJoystickResponses(axisCount, joystick , idJoystick)
+				joysticksStates.append(response)
+				self.text_print.unindent()
+				#time.sleep(0.2)
+			pygame.display.flip()
+			
+			# limits to 60 fps.
+			self.clk.tick(60)
+			return joysticksStates, self.quitSignal
+		except KeyboardInterrupt:
+			self.close()
+			return None, True
 	
 	def close(self):
+		print("exiting python UI")
 		pygame.quit()
 
 '''
