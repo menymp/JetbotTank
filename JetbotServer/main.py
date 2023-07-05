@@ -12,7 +12,7 @@ import time
 
 from socketConnectionHandler import socketConnectionHandler
 from serialControl import serialControl
-from configsJetBotServerUtils import configsJetBotHandler
+from configsJetBotUtils import configsJetBotServerHandler
 #not yet on use, but usefull if need to know availabe serial ports on windows and linux
 from serialPortUtills import serial_ports
 from CameraHttpServer import webcamIPServerHandle
@@ -28,7 +28,7 @@ def handleConfigs():
 	return loadConfigs()
 
 def loadConfigs():
-	configsHandler = configsJetBotHandler()
+	configsHandler = configsJetBotServerHandler()
 	configsObj = configsHandler.getConfigs()
 	return configsObj
 
@@ -65,7 +65,7 @@ def saveNewConfigs(currentConfigs, additionalArgs):
 			currentConfigs["maxLen"] = int(value)
 		else:
 			print("WARNING: command '" + key + "' still not defined, ignored!")
-	configsHandler = configsJetBotHandler()
+	configsHandler = configsJetBotServerHandler()
 	configsHandler.saveConfigs(currentConfigs)
 	return True
 

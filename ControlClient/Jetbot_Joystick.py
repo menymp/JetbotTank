@@ -13,6 +13,7 @@ sys.path.append("../JetbotServer")
 
 from socketServerWrapper import socketClientW
 from joystickUtills import uiPygameJetbot
+from configsJetBotUtils import configsJetBotClientHandler
 '''
 s = socket.socket()
 
@@ -20,15 +21,37 @@ host = 'xxx.xxx.x.x'
 port = 8990 #1234
 s.connect((host, port))
 '''
- 
-
-
+'''
+The following lines are the same in the server and client, place in a common file
+'''
 def handleConfigs():
-	configs = {
-	}
+	configs = loadConfigs()
 	newParameters = parseLineCommands()
-	nconfigs = mapCommands(configs, newParameters)
-	return nconfigs
+	saveNewConfigs(configs, newParameters)
+	return loadConfigs()
+
+def loadConfigs():
+	configsHandler = configsJetBotClientHandler()
+	configsObj = configsHandler.getConfigs()
+	return configsObj
+
+def saveNewConfigs(currentConfigs, additionalArgs):
+	#Map current configs into the object and stores it
+	# is there a better approach?? ToDo: review
+	for key, value in additionalArgs.items():
+		if key == "--mode":
+			currentConfigs["joystickMode"] = value
+		elif key == "--host":
+			currentConfigs["host"] = value
+		elif key == "--port":
+			currentConfigs["port"] = int(value)
+		elif key == "--videoPort":
+			currentConfigs["videoPort"] = int(value)
+		else:
+			print("WARNING: command '" + key + "' still not defined, ignored!")
+	configsHandler = configsJetBotClientHandler()
+	configsHandler.saveConfigs(currentConfigs)
+	return True
 
 def parseLineCommands():	
 	#loop over each arg to build the relevant args list
@@ -44,22 +67,6 @@ def parseLineCommands():
 			sys.exit(0)
 		inputParameters[tokens[0]] = tokens[1]
 	return inputParameters
-
-def mapCommands(currentConfigs, additionalArgs):
-	#Map current configs into the object and stores it
-	# is there a better approach?? ToDo: review
-	for key, value in additionalArgs.items():
-		if key == "--mode":
-			currentConfigs["joystickMode"] = value
-		elif key == "--host":
-			currentConfigs["host"] = value
-		elif key == "--port":
-			currentConfigs["port"] = int(value)
-		elif key == "--videoPort":
-			currentConfigs["videoPort"] = int(value)
-		else:
-			print("WARNING: command '" + key + "' still not defined, ignored!")
-	return currentConfigs
 
 def initSocketClient(configs):
 	client = socketClientW()

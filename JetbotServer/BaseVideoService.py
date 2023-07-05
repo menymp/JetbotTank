@@ -1,6 +1,17 @@
 import cv2
 import numpy as np
 
+#ToDo: sets a base and split into specific configs
+#	expected hw to support
+#		usb webcam / IP camera
+#		PI camera
+#		kinect cam ??
+# these drivers should be part of a generic lib shared with device node server ??
+class jetsonPICameraService():
+	GSTREAMER_PIPELINE = 'nvarguscamerasrc ! video/x-raw(memory:NVMM), width=640, height=480, format=(string)NV12, framerate=21/1 ! nvvidconv flip-method=0 ! video/x-raw, width=640, height=480, format=(string)BGRx ! videoconvert ! video/x-raw, format=(string)BGR ! appsink'
+	objCamara = cv2.VideoCapture(GSTREAMER_PIPELINE, cv2.CAP_GSTREAMER)
+
+
 class BaseVideoService():
 	def __init__(self, connectionArgs = None):
 		self.connectionArgs = connectionArgs

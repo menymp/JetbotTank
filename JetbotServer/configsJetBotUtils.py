@@ -8,7 +8,7 @@ SERIAL_TIMEOUT = (0.01,0.5)
 ALLOWED_BAUDS = [9600, 19200, 38400, 57600, 115200]
 
 
-class configsJetBotHandler(baseConfigs):
+class configsJetBotServerHandler(baseConfigs):
 	def __init__(self):
 		self.DEFAULT_PATH = "./configsJetBot.json"
 		self.DEFAULT_CONFIGS_STRUCT = {
@@ -39,7 +39,32 @@ class configsJetBotHandler(baseConfigs):
 		if  not (SERIAL_TIMEOUT[0] < configObj["serialTimeout"] <= SERIAL_TIMEOUT[1]):
 			return False
 		return True	
+
+class configsJetBotClientHandler(baseConfigs):
+	def __init__(self):
+		self.DEFAULT_PATH = "./configsJetBotClient.json"
+		self.DEFAULT_CONFIGS_STRUCT = {
+			"host": "",
+			"port": 8990,
+			"videoPort": 9090,
+			"mode": "tank"
+		}
+		pass
 	
+	def checkFileIntegrity(self, path = None):
+		if path is None:
+			spath = self.DEFAULT_PATH
+		else:
+			spath = path
+		
+		configObj = self.readConfigFile(spath)	
+		if configObj["mode"] == "":#ToDo: Evaluate use a regex
+			return False 
+		if  not (ALLOWED_CONN_PORTS[0] < configObj["port"] <= ALLOWED_CONN_PORTS[1]):
+			return False
+		if  not (ALLOWED_CONN_PORTS[0] < configObj["videoPort"] <= ALLOWED_CONN_PORTS[1]):
+			return False
+		return True
 	
 
 
