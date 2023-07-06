@@ -10,7 +10,7 @@ from threading import Timer
 import json
 import asyncio
 
-from BaseVideoService import BaseVideoService
+from BaseVideoService import jetsonPICameraService, localCameraService
 
 class videoFeedHandler(tornado.web.RequestHandler):
 	def initialize(self, videoService):
@@ -42,10 +42,23 @@ class videoFeedHandler(tornado.web.RequestHandler):
 		self.flush()
 
 class videoHandler():
-	def __init__(self, args = None):
-		
-		#ToDo: the BaseVideoService should receive the init parameters of the expected camera type
-		self.videoService = BaseVideoService()
+	def __init__(self, args):
+		'''
+		connectionArgs = {
+			"type": "local",#can be local or picam for now
+			"port": 9090,
+			"width": 640,
+			"height": 480,
+			"camId":0,#ignore this for pi camera
+		}
+		'''
+		#
+		if args["type"] == "local":
+			self.videoService = localCameraService(args)
+		elif args["type"] == "picam":
+			self.videoService = jetsonPICameraService(args)
+		else:
+			raise Exception("non supported cam type: " + args["type"])
 		
 		self.app = self._make_app(self.videoService)
 		pass

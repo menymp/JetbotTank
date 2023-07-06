@@ -1,0 +1,7 @@
+{
+    "host": "#.#.#.#",
+    "port": 8990,
+    "videoPort": 9090,
+    "mode": "tank",
+    "joystickMode": "tank"
+}

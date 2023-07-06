@@ -109,7 +109,15 @@ if __name__ == "__main__":
 		time.sleep(1)
 		#webcamIPServerHandle('',8087) #old logic from 2018, unsuccessfully ported to python3
 		#new logic with Tornado 6
-		videoHandlerObj = videoHandler()
+		#check a way to manage multiple cams without threads
+		connectionArgs = {
+			"type": "local",#can be local or picam for now
+			"port": 9090,
+			"width": 640,
+			"height": 480,
+			"camId":0,#ignore this for pi camera
+		}
+		videoHandlerObj = videoHandler(connectionArgs)
 		videoHandlerObj.serverListen()
 	print("ends")
 	pass

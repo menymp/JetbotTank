@@ -8,9 +8,9 @@ import json
 from pathlib import Path
 
 class baseConfigs():
-	DEFAULT_PATH = "./configsJetBot.json"
-	DEFAULT_CONFIGS_STRUCT = {
-	}
+	#DEFAULT_PATH = "./configsJetBot.json"
+	#DEFAULT_CONFIGS_STRUCT = {
+	#}
 	
 	def readConfigFile(self, path = None):
 		if path is None:
@@ -44,8 +44,9 @@ class baseConfigs():
 		else:
 			spath = path
 		
-		if not self.checkFileIntegrity(spath):
-			return None
+		mpath = Path(spath)
+		if not mpath.is_file() or not self.checkFileIntegrity(spath):
+			self.saveConfigs(self.DEFAULT_CONFIGS_STRUCT, self.DEFAULT_PATH)
 		
 		configDict = self.readConfigFile(spath)
 		return configDict
