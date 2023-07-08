@@ -40,11 +40,11 @@ class BaseVideoService():
 class jetsonPICameraService(BaseVideoService):
 	def __init__(self, connectionArgs):
 		self.connectionArgs = connectionArgs
-		self.GSTREAMER_PIPELINE = 'nvarguscamerasrc ! video/x-raw(memory:NVMM), width='+connectionArgs["width"]+', height='+connectionArgs["height"]+', format=(string)NV12, framerate=21/1 ! nvvidconv flip-method=0 ! video/x-raw, width='+connectionArgs["width"]+', height='+connectionArgs["height"]+', format=(string)BGRx ! videoconvert ! video/x-raw, format=(string)BGR ! appsink'
+		self.GSTREAMER_PIPELINE = 'nvarguscamerasrc ! video/x-raw(memory:NVMM), width='+str(connectionArgs["width"])+', height='+str(connectionArgs["height"])+', format=(string)NV12, framerate=21/1 ! nvvidconv flip-method=0 ! video/x-raw, width='+str(connectionArgs["width"])+', height='+str(connectionArgs["height"])+', format=(string)BGRx ! videoconvert ! video/x-raw, format=(string)BGR ! appsink'
 		self.image = np.zeros((connectionArgs["width"],connectionArgs["height"],3), dtype=np.uint8)
 		cv2.putText(self.image, "No Image", (10,50), cv2.FONT_HERSHEY_SIMPLEX, 3, (255,255,255), 2, cv2.LINE_AA)
 		#Init CV2 camera obj
-		self.cam = cv2.VideoCapture(GSTREAMER_PIPELINE, cv2.CAP_GSTREAMER)
+		self.cam = cv2.VideoCapture(self.GSTREAMER_PIPELINE, cv2.CAP_GSTREAMER)
 		self.w = connectionArgs["width"]
 		self.h = connectionArgs["width"]
 		pass

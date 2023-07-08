@@ -1,4 +1,4 @@
 cambiar powermode a 10 watts
 
 sudo /usr/sbin/nvpmodel -m 0
-
+https://www.waveshare.com/wiki/Install_ROS_System_on_Jetson_Nano_%26_Environment_Cofiguration
