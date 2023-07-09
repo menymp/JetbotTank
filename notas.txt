@@ -2,3 +2,67 @@ cambiar powermode a 10 watts
 
 sudo /usr/sbin/nvpmodel -m 0
 https://www.waveshare.com/wiki/Install_ROS_System_on_Jetson_Nano_%26_Environment_Cofiguration
+
+#comandos de ros usados hasta el momento
+printenv | grep ROS                 #imprime las variables de entornon de ROS
+#inicializar variables
+source /opt/ros/kinetic/setup.bash
+
+Para construir un proyecto existente se utiliza el comando catkin_make
+
+si el directorio ya contiene un subdirectorio src, colocara un CMakeLists.txt en ./src
+
+
+############### PARA CREAR UN ENTORNO DE  catkin
+
+----------------setear el workspace
+http://wiki.ros.org/catkin/Tutorials/create_a_workspace
+----------------construir un paquete nuevo TENIENDO YA UN WORKSPACE
+http://wiki.ros.org/catkin/Tutorials/CreatingPackage
+ejemplo de estructura esperada
+workspace_folder/        -- WORKSPACE
+  src/                   -- SOURCE SPACE
+    CMakeLists.txt       -- 'Toplevel' CMake file, provided by catkin
+    package_1/
+      CMakeLists.txt     -- CMakeLists.txt file for package_1
+      package.xml        -- Package manifest for package_1
+    ...
+    package_n/
+      CMakeLists.txt     -- CMakeLists.txt file for package_n
+      package.xml        -- Package manifest for package_n
+
+catkin_create_pkg [name] [dependence1] [dependence2] ...
+ejemplo
+catkin_create_pkg beginner_tutorials std_msgs rospy roscpp      
+
+despues construir el workspace en el directorio base del workspace de catkin y agregar al entorno
+catkin_make
+. path/to/current/devel/setup.bash
+
+roscd beginner_tutorials
+source ./devel/setup.bash
+
+
+
+########### para correr ros
+
+roscore                 inicia el sistema
+rosnode list            lista los nodos actuales del sistema
+
+
+rosnode [package_name] [node_name]  ejecuta un nodo y le asigna un nombre
+por ejemplo rosrun turtlesim turtlesim_node
+
+######## para ver una grafica con los nodos actuales instalar: <distro> = melodic
+$ sudo apt-get install ros-<distro>-rqt
+$ sudo apt-get install ros-<distro>-rqt-common-plugins
+
+rosrun rqt_graph rqt_grap
+
+###### desplegar la informacion de un topic
+rostopic echo /turtle/cmdvel
+
+########## para correr un nodo que se ha creado, ir a la carpeta donde se ejecuto catkin_make
+source ./devel/setup.bash
+
+

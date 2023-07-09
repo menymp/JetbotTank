@@ -111,7 +111,7 @@ if __name__ == "__main__":
 		#new logic with Tornado 6
 		#check a way to manage multiple cams without threads
 		connectionArgs = {
-			"type": "local",#can be local or picam for now
+			"type": "picam",#can be local or picam for now
 			"port": 9090,
 			"width": 640,
 			"height": 480,
