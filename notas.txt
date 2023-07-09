@@ -1,3 +1,34 @@
+Lista ToDo: 
+etapa de robot 2.0
+	se espera que el vehiculo este listo para operar y los nodos de control basicos
+	se encuentren en su punto de operacion
+	
+	-servidor de teleoperacion basico     OK
+	-ventilador 5v jetson	              OK
+	-conector xt60 bateria interna        OK
+	-conector xt60 de carga para bateria
+	-housing para bateria
+	-ploga con falso contacto
+
+	-protector de policarbonato de 6mm
+	-polea con liga para Lidar
+	
+	-ambiente de ROS                      OK
+	-GPS y nodo
+	-pruebas basicas con kinect
+	-
+
+etapa de robot 3.0
+	se esperan mejoras adicionales y las primeras pruebas con AI
+	
+	-encoders y nodo
+	-unidad inercial de navegacion
+	-AI
+	-lamparas
+	-superestructura mejorada facil acceso
+	-SSD externo
+
+
 cambiar powermode a 10 watts
 
 sudo /usr/sbin/nvpmodel -m 0
