@@ -42,6 +42,8 @@ catkin_make
 roscd beginner_tutorials
 source ./devel/setup.bash
 
+algunos paquetes externos se tienen que instalar, por ejemplo
+sudo apt-get install ros-melodic-serial
 
 
 ########### para correr ros
