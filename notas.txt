@@ -8,10 +8,10 @@ etapa de robot 2.0
 	-conector xt60 bateria interna        OK
 	-conector xt60 de carga para bateria
 	-housing para bateria
-	-ploga con falso contacto
+	-ploga con falso contacto             OK
 
 	-protector de policarbonato de 6mm
-	-polea con liga para Lidar
+	-polea con liga para Lidar            OK
 	
 	-ambiente de ROS                      OK
 	-GPS y nodo
@@ -33,6 +33,46 @@ cambiar powermode a 10 watts
 
 sudo /usr/sbin/nvpmodel -m 0
 https://www.waveshare.com/wiki/Install_ROS_System_on_Jetson_Nano_%26_Environment_Cofiguration
+
+lista de dispositivos serial
+lsusb
+ls -la /dev/ttyACM*
+
+#ejecutar NEATO xv11
+
+primero seteamos el modo distribuido, esto es, la raspberry correra ROS y
+la pc windows se conectara
+EN LA RASPERRY O JETSON
+export ROS_IP="IP DEL DISPOSITIVO CON LIDAR"
+export ROS_MASTER_URI="http://IP DEL DISPOSITIVO CON LIDAR:11311"
+
+EN LA MAQUINA WINDOWS, correr el ejecutable ROS.exe
+export ROS_IP=IP DE WINDOWS SIN COMILLAS
+!!!!SIN COMILLAS!!!!!!
+export ROS_MASTER_URI=http://IP DEL DISPOSITIVO CON LIDAR:11311
+
+EN LA RASPBERRY O JETSON
+roscore &
+ir al directorio con catkin_ws, en mi caso:
+cd ~/JetbotTank/ROS/catkin_ws
+agregar los sources para reconocer los nodos actuales
+source ./devel/setup.bash
+ejecutar el comando de los nodos, en mi caso es este:
+y el lidar se encuentra en el puerto /dev/ttyACM1
+rosrun xv11_lidarDriver neato_laser_publisher _port:=/dev/ttyACM1 _firmware_version:=2
+
+EN LA MAQUINA WINDOWS
+ejecutamos el ambiente rviz
+rviz
+una vez abierta la interfaz, click en el boton Add (esquina inferior izquierda)
+seleccionar la opcion By Display type (esquina superior izquierda del menu que se acaba de abrir)
+seleccionar la opcion LaserScan y dar ok
+en el nuevo tema de LaserScan que aparecio en la barra lateral izquierda seleccionar en Topic /scan
+en la opcion Size, cambiar el valor a 0.05
+y en la opcion Fixed Frame de Global Options cambiar map por neato_laser
+el mapa debe trazarse de inmediato
+
+###########################
 
 #comandos de ros usados hasta el momento
 printenv | grep ROS                 #imprime las variables de entornon de ROS
@@ -81,7 +121,8 @@ sudo apt-get install ros-melodic-serial
 
 roscore                 inicia el sistema
 rosnode list            lista los nodos actuales del sistema
-
+rostopic list -v        lista los topics actuales
+rostopic echo /scan     muestra los mensajes en el topic /scan
 
 rosnode [package_name] [node_name]  ejecuta un nodo y le asigna un nombre
 por ejemplo rosrun turtlesim turtlesim_node
