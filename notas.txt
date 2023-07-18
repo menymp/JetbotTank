@@ -3,26 +3,26 @@ etapa de robot 2.0
 	se espera que el vehiculo este listo para operar y los nodos de control basicos
 	se encuentren en su punto de operacion
 	
-	-servidor de teleoperacion basico      OK
-	-ventilador 5v jetson	               OK
-	-conector xt60 bateria interna         OK
-	-conector xt60 de carga para bateria   OK
-	-housing para bateria
-	-ploga con falso contacto              OK
+	-servidor de teleoperacion basico                 OK
+	-ventilador 5v jetson	                          OK
+	-conector xt60 bateria interna                    OK
+	-conector xt60 de carga para bateria              OK
+	-housing para bateria                             OK
+	-ploga con falso contacto                         OK
 	-superestructura mejorada facil acceso
 
 	-protector de policarbonato de 6mm
-	-polea con liga para Lidar             OK
+	-polea con liga para Lidar                        OK
 	
-	-ambiente de ROS                       OK
+	-ambiente de ROS                                  OK
 	-GPS y nodo
 	-pruebas basicas con kinect
-	-pruebas basicas lidar                 OK
+	-pruebas basicas lidar                            OK
+	-encoders hmc5883l, medicion de bateria y nodo
 
 etapa de robot 3.0
 	se esperan mejoras adicionales y las primeras pruebas con AI
-	
-	-encoders hmc5883l, medicion de bateria y nodo
+
 	-unidad inercial de navegacion
 	-AI
 	-lamparas
