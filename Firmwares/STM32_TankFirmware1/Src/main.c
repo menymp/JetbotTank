@@ -19,6 +19,8 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "adc.h"
+#include "i2c.h"
 #include "tim.h"
 #include "usb_device.h"
 #include "gpio.h"
@@ -98,6 +100,8 @@ int main(void)
   MX_GPIO_Init();
   HAL_STM32_InitPWM();  //pwm init
   HAL_STM32_USB_DEVICE_Init();
+  MX_ADC1_Init();/////////VBAT
+  MX_I2C3_Init();/////////HMC5883L
   /* Initialize all configured peripherals */
   HAL_Delay(100);
   /* Infinite loop */
