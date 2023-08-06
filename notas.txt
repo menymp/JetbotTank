@@ -14,7 +14,7 @@ etapa de robot 2.0
 	-ploga con falso contacto                         OK
 	-superestructura mejorada facil acceso            OK
 
-	-protector de policarbonato de 6mm
+	-protector de policarbonato de 6mm                OK
 	-polea con liga para Lidar                        OK
 	
 	-ambiente de ROS                                  OK
