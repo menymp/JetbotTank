@@ -12,7 +12,7 @@ etapa de robot 2.0
 	-conector xt60 de carga para bateria              OK
 	-housing para bateria                             OK
 	-ploga con falso contacto                         OK
-	-superestructura mejorada facil acceso
+	-superestructura mejorada facil acceso            OK
 
 	-protector de policarbonato de 6mm
 	-polea con liga para Lidar                        OK
@@ -21,7 +21,7 @@ etapa de robot 2.0
 	-GPS y nodo
 	-pruebas basicas con kinect
 	-pruebas basicas lidar                            OK
-	-encoders hmc5883l, medicion de bateria y nodo
+	-encoders hmc5883l, medicion de bateria y nodo    ok
 
 etapa de robot 3.0
 	se esperan mejoras adicionales y las primeras pruebas con AI
