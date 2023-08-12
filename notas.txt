@@ -13,6 +13,8 @@ etapa de robot 2.0
 	-housing para bateria                             OK
 	-ploga con falso contacto                         OK
 	-superestructura mejorada facil acceso            OK
+	-suspension reforzada
+	-ordenamiento de cableado
 
 	-protector de policarbonato de 6mm                OK
 	-polea con liga para Lidar                        OK
@@ -21,7 +23,7 @@ etapa de robot 2.0
 	-GPS y nodo
 	-pruebas basicas con kinect
 	-pruebas basicas lidar                            OK
-	-encoders hmc5883l, medicion de bateria y nodo    ok
+	-encoders hmc5883l, medicion de bateria y nodo    OK
 
 etapa de robot 3.0
 	se esperan mejoras adicionales y las primeras pruebas con AI
