@@ -13,9 +13,9 @@ etapa de robot 2.0
 	-housing para bateria                             OK
 	-ploga con falso contacto                         OK
 	-superestructura mejorada facil acceso            OK
-	-suspension reforzada
-	-ordenamiento de cableado
-
+	-suspension reforzada                             OK
+	-ordenamiento de cableado                         OK
+    -checador de bateria y sensores
 	-protector de policarbonato de 6mm                OK
 	-polea con liga para Lidar                        OK
 	
