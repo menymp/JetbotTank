@@ -15,7 +15,7 @@ etapa de robot 2.0
 	-superestructura mejorada facil acceso            OK
 	-suspension reforzada                             OK
 	-ordenamiento de cableado                         OK
-    -checador de bateria y sensores
+	-checador de bateria y sensores                   OK
 	-protector de policarbonato de 6mm                OK
 	-polea con liga para Lidar                        OK
 	
