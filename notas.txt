@@ -20,7 +20,7 @@ etapa de robot 2.0
 	-polea con liga para Lidar                        OK
 	
 	-ambiente de ROS                                  OK
-	-GPS y nodo
+	-GPS y nodo                                       OK
 	-pruebas basicas con kinect
 	-pruebas basicas lidar                            OK
 	-encoders hmc5883l, medicion de bateria y nodo    OK
