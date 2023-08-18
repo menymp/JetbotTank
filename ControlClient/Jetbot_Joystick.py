@@ -9,6 +9,7 @@ import urllib.request as request
 import cv2
 import sys
 import math
+import time
 sys.path.append("../JetbotServer")
 
 from socketServerWrapper import socketClientW
@@ -75,19 +76,22 @@ def initSocketClient(configs):
 	return client
 
 def userValuesMap(socketObj, configs, userCmds):
-	mappedStr = ""
 	#ToDo:  handle multiple joysticks For now just takes the first found joystick in the array
 	mode = configs["joystickMode"]
 	cmd = userCmds[0]
 	if mode == "tank":
-		mappedStr = tankMode(cmd)
+		mappedStr1, mappedStr2 = tankMode(cmd)
+		socketObj.send(mappedStr1)
+		time.sleep(0.05)
+		socketObj.send(mappedStr2)
 	elif mode == "car":
 		mappedStr = carMode(cmd)
+		socketObj.send(mappedStr)
 	else:
 		print("ERROR: '" + mode + "' is not defined!")
 		sys.exit(1)
 	
-	socketObj.send(mappedStr) #by default encode to utf-8
+	#socketObj.send(mappedStr) #by default encode to utf-8
 	return True
 
 def tankMode(cmdObj):
@@ -105,33 +109,24 @@ def tankMode(cmdObj):
 		elif key == "axis4":
 			rawValP2 = value
 	leftP,rightP = singleJoystickTransform(rawValP1,rawValP2)
-	POWER_M1 = int(abs(leftP*253))
-	POWER_M2 = int(abs(rightP*253))
+	POWER_M1 = int(abs(leftP*100))
+	POWER_M2 = int(abs(rightP*100))
 	
 	if(leftP < 0):
-		Dir1 = 'r'
+		Dir1 = "MOTAR"+str(POWER_M1)
 	else:
-		Dir1 = 'f'
+		Dir1 = "MOTAF"+str(POWER_M1)
 	
 	if(rightP < 0):
-		Dir2 = 'r'
+		Dir2 = "MOTBR"+str(POWER_M2)
 	else:
-		Dir2 = 'f'
-	
-	if(Dir1 == 'f' and Dir2 == 'f'):
-		CMD = 'c' + ',' + str(POWER_M1)+','+str(POWER_M2)+'#'
-	if(Dir1 == 'f' and Dir2 == 'r'):
-		CMD = 'e' + ',' + str(POWER_M1)+','+str(POWER_M2)+'#'
-	if(Dir1 == 'r' and Dir2 == 'f'):
-		CMD = 'd' + ',' + str(POWER_M1)+','+str(POWER_M2)+'#'
-	if(Dir1 == 'r' and Dir2 == 'r'):
-		CMD = 'b' + ',' + str(POWER_M1)+','+str(POWER_M2)+'#'
+		Dir2 = "MOTBF"+str(POWER_M2)
 	
 	#print(CMD)
 	
 	#print("L R: " + str(leftP) + " " + str(rightP))
 	#s.send(CMD.encode("utf-8"))
-	return CMD
+	return Dir1,Dir2
 
 def carMode(cmdObj):
 	return str
