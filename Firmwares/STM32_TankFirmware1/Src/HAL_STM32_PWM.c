@@ -2,9 +2,23 @@
  * HAL_STM32_PWM.c
  *
  *  Created on: 9 jul. 2019
- *      Author: TOSHIBA
+ *      Author: menymp
  */
 #include "HAL_STM32_PWM.h"
+
+/*
+ * name:		HAL_STM32_InitPWM
+ *
+ * description:	specific function to init pwm functionalities
+ *
+ * globals:		NONE
+ *
+ * parameters:	NONE
+ *
+ * returns:		NONE
+ *
+ * Autor:		menymp
+ */
 
 void HAL_STM32_InitPWM(void)
 {
@@ -14,12 +28,24 @@ void HAL_STM32_InitPWM(void)
 	TIM4->CCR2 = 0;
 	TIM4->CCR1 = 0;
 }
-void HAL_STM32_SetPWMDuty1(uint32_t Duty)
-{
-	TIM4->CCR1 = Duty;
-}
 
-void HAL_STM32_SetPWMDuty2(uint32_t Duty)
+/*
+ * name:		HAL_STM32_SetPWMDuty
+ *
+ * description:	sets pwm duty cycle
+ *
+ * globals:		NONE
+ *
+ * parameters:	dutyCycleId		address of timer duty cycle register
+ * 				duty			new duty cycle to set
+ *
+ * returns:		NONE
+ *
+ * Autor:		menymp
+ */
+
+void HAL_STM32_SetPWMDuty(uint32_t *dutyCycleId, uint32_t duty)
 {
-	TIM4->CCR2 = Duty;
+	//TIM4->CCR1 = Duty;
+	*dutyCycleId = Duty;
 }

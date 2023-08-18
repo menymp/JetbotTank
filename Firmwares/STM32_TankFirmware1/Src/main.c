@@ -24,10 +24,19 @@
 #include "tim.h"
 #include "usb_device.h"
 #include "gpio.h"
+#include "string.h"
 
 #include "HAL_STM32_USB.h"
 #include "HAL_STM32_PWM.h"
 #include "HAL_STM32_CONTROL.h"
+
+#include "controlcmds.h"
+
+void initMotors(void);
+int executeCommand(uint8_t * inputBuffer, uint32_t inputBuffLen)
+
+#define MOTOR_COUNT 2
+DC_MOTOR motors[MOTOR_COUNT];
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -223,6 +232,109 @@ int main(void)
     /* USER CODE BEGIN 3 */
 
   /* USER CODE END 3 */
+}
+
+/*
+ * name:		initMotors
+ *
+ * description:	init dc motors availables to the system
+ *
+ * globals:		dc_motors		where to store motor register information
+ *
+ * parameters:	NONE
+ *
+ * returns:		NONE
+ *
+ * Autor:		menymp
+ */
+
+void initMotors(void)
+{
+	/*ToDo: set all the expected registers here*/
+}
+
+/*
+ * name:		executeCommand
+ *
+ * description:	parses a command and executes operations
+ *
+ * globals:		dc_motors		where to store motor register information
+ *
+ * parameters:	inputBuffer     buffer with input command to parse and execute
+ * 				inputBufferLen  length of input buffer
+ *
+ * returns:		NONE
+ *
+ * Autor:		menymp
+ */
+
+int executeCommand(uint8_t * inputBuffer, uint32_t inputBuffLen)
+{
+	/*misc variables for commands*/
+	int motorAddr = 0;
+	int motorDir = 0;
+	int motorPower = 0;
+	char * motorPtr = NULL;
+
+	if(inputBuffLen < MIN_COMMAND_SIZE)
+	{
+		return FAILURE;
+	}
+
+	if (memcmp(inputBuffer, MOTOR_CMD,sizeof(MOTOR_CMD)) == 0)
+	{
+		/*A MOTOR COMMAND*/
+		/*012345678*/
+		/*MOTAF22;*/
+		/*BUFF LEN 7*/
+		if(inputBuffLen < 7 || inputBuffer[inputBuffLen - 1] != ';')
+		{
+			return FAILURE;
+		}
+
+		if(inputBuffer[sizeof(MOTOR_CMD)] == 'A')
+		{
+			motorAddr = 0;
+		}
+		if(inputBuffer[sizeof(MOTOR_CMD)] == 'B')
+		{
+			motorAddr = 1;
+		}
+
+		if(inputBuffer[sizeof(MOTOR_CMD)] == 'F')
+		{
+			motorDir = 0;
+		}
+		if(inputBuffer[sizeof(MOTOR_CMD)] == 'R')
+		{
+			motorDir = 1;
+		}
+		motorPower = strtol(&Buffer[5],&ptr,10);/*InputBuffer ptr to tail, base of the number to parse*/
+		DCMotor_set(motors[motorAddr], motorDir, motorPower);
+		return SUCCESS;
+	}
+	else if(memcmp(inputBuffer, READY_CMD,sizeof(READY_CMD)) == 0)
+	{
+		/* a ready command*/
+	}
+	else if(memcmp(inputBuffer, BRAKE_CMD,sizeof(BRAKE_CMD)) == 0)
+	{
+		/* a braking command*/
+	}
+
+	if(inputBuffLen <= 4)
+	{
+		return;
+	}
+
+	if (memcmp(inputBuffer, READ_CMD,sizeof(READ_CMD)) == 0)
+	{
+		/*reading current data for the system*/
+	}
+	else if(memcmp(inputBuffer, LAMP_CMD,sizeof(LAMP_CMD)) == 0)
+	{
+		/*lamp working*/
+	}
 }
 
 /**

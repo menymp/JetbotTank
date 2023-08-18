@@ -2,7 +2,7 @@
  * HAL_STM32_CONTROL.h
  *
  *  Created on: 11 jul. 2019
- *      Author: TOSHIBA
+ *      Author: menymp
  */
 
 #ifndef HAL_STM32_CONTROL_H_
@@ -16,6 +16,14 @@ typedef enum System_state
 	SYS_READY
 }Sys_state;
 
+typedef struct DC_MOTOR
+{
+	uint32_t motor_dirA_pin = 0;
+	uint32_t motor_portA_pin = 0;
+	uint32_t motor_dirB_pin = 0;
+	uint32_t motor_portB_pin = 0;
+	uint32_t * dutyCycleReg = NULL;
+};
 
 
 #define SYS_TIMEOUT 	70
@@ -35,7 +43,6 @@ typedef enum System_state
 #define MOT2_DIR2_PIN	M2_B_Pin//5
 #define MOT2_DIR2_PORT	M2_B_GPIO_Port
 
-void Motor1_set(uint32_t Dir, uint32_t Power);
-void Motor2_set(uint32_t Dir, uint32_t Power);
+void DCMotor_set(DC_MOTOR dc_motor, uint32_t dir, uint32_t power);
 
 #endif /* HAL_STM32_CONTROL_H_ */
