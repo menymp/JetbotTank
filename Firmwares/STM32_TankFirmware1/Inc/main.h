@@ -71,10 +71,6 @@ void Error_Handler(void);
 #define M2_A_GPIO_Port GPIOA
 #define M2_B_Pin GPIO_PIN_6
 #define M2_B_GPIO_Port GPIOA
-#define TACHO_1_Pin GPIO_PIN_1
-#define TACHO_1_GPIO_Port GPIOB
-#define TACHO_2_Pin GPIO_PIN_2
-#define TACHO_2_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

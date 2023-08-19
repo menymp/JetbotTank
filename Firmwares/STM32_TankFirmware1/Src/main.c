@@ -113,6 +113,7 @@ int main(void)
   HAL_STM32_USB_DEVICE_Init();
   MX_ADC1_Init();/////////VBAT
   MX_I2C3_Init();/////////HMC5883L
+  MX_TIM2_Init();
   HMC5883L_Init();
   /* Initialize all configured peripherals */
   HAL_Delay(100);

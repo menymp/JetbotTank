@@ -24,7 +24,7 @@ float readBatteryVoltage(ADC_HandleTypeDef * adcHandle)
 {
 	uint16_t raw;
 
-	HAL_ADC_Start(adcHandle);
+	/*HAL_ADC_Start(adcHandle); suposedly on continuous conversion mode*/
 	HAL_ADC_PollForConversion(adcHandle, HAL_MAX_DELAY);
 	raw = HAL_ADC_GetValue(adcHandle);
 	/*convert to float value*/
