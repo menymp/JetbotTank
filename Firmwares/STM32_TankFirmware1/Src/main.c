@@ -29,11 +29,13 @@
 #include "HAL_STM32_USB.h"
 #include "HAL_STM32_PWM.h"
 #include "HAL_STM32_CONTROL.h"
+#include "HMC5883L.h"
+#include "VBAT_Adc.h"
 
 #include "controlcmds.h"
 
 void initMotors(void);
-int executeCommand(uint8_t * inputBuffer, uint32_t inputBuffLen)
+int executeCommand(uint8_t * inputBuffer, uint32_t inputBuffLen);
 
 #define MOTOR_COUNT 2
 DC_MOTOR motors[MOTOR_COUNT];
@@ -111,14 +113,13 @@ int main(void)
   HAL_STM32_USB_DEVICE_Init();
   MX_ADC1_Init();/////////VBAT
   MX_I2C3_Init();/////////HMC5883L
+  HMC5883L_Init();
   /* Initialize all configured peripherals */
   HAL_Delay(100);
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   HAL_GPIO_WritePin(LED_BOARD_PORT,LED_BOARD_PIN,SET);
   /* USER CODE BEGIN 2 */
-  Motor1_set(0,0); //00
-  Motor2_set(0,0); //00
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -129,98 +130,31 @@ int main(void)
 	  switch(Estado_sistema)
 	  {
 	  case SYS_READY:
-		  //espera de instrucciones
-		  if(HAL_STM32_VCP_retrieveInputData((uint8_t *)Buffer,&Len32)!=0)
+		  /*waiting for new instructions*/
+		  if(HAL_STM32_VCP_retrieveInputData((uint8_t *)Buffer,&Len32)!=0 && executeCommand(Buffer, Len32) == SUCCESS)
 		  {
-			  if(Buffer[0] == 'R' && Buffer[1] == 'D' && Buffer[2] == 'Y')
-			  {
-				//instruccion de inicio
-				  Motor1_set(0,0); //00
-				  Motor2_set(0,0);
-			  }
-			  if(Buffer[0] == 'M' && Buffer[1] == 'O' && Buffer[2] == 'T')
-			  {
-				//instruccion de motor
-
-				  Pow = strtol(&Buffer[5],&ptr,10);
-				  //Pow = atoi(Buffer);
-				  if(Buffer[3] == 'A')
-				  {
-					  if(Buffer[4] == 'F') Motor1_set(1,Pow);
-					  if(Buffer[4] == 'R') Motor1_set(2,Pow);
-				  }
-
-				  if(Buffer[3] == 'B')
-				  {
-					  if(Buffer[4] == 'F') Motor2_set(1,Pow);
-					  if(Buffer[4] == 'R') Motor2_set(2,Pow);
-				  }
 				  Timeout = 0;
 				  Estado_sistema = SYS_BUSY;
-			  }
-			  if(Buffer[0] == 'B' && Buffer[1] == 'R' && Buffer[2] == 'K')
-			  {
-				//instruccion de freno
-				  Motor1_set(0,0); //00
-				  Motor2_set(0,0); //00
-			  }
 		  }
-		  break;
 
 	  case SYS_BUSY:
 		  Timeout ++;
-		  if(HAL_STM32_VCP_retrieveInputData((uint8_t *)Buffer,&Len32)!=0)
-		  {
-			  if(Buffer[0] == 'R' && Buffer[1] == 'D' && Buffer[2] == 'Y')
-			  {
-				//instruccion de inicio
-				  Motor1_set(0,0); //00
-				  Motor2_set(0,0);
-			  }
-			  if(Buffer[0] == 'M' && Buffer[1] == 'O' && Buffer[2] == 'T')
-			  {
-					//instruccion de motor
-
-					  Pow = strtol(&Buffer[5],&ptr,10);
-					  //Pow = atoi(Buffer);
-					  if(Buffer[3] == 'A')
-					  {
-						  if(Buffer[4] == 'F') Motor1_set(1,Pow);
-						  if(Buffer[4] == 'R') Motor1_set(2,Pow);
-					  }
-
-					  if(Buffer[3] == 'B')
-					  {
-						  if(Buffer[4] == 'F') Motor2_set(1,Pow);
-						  if(Buffer[4] == 'R') Motor2_set(2,Pow);
-					  }
-					  Timeout = 0;
-					  Estado_sistema = SYS_BUSY;
-			  }
-			  if(Buffer[0] == 'B' && Buffer[1] == 'R' && Buffer[2] == 'K')
-			  {
-				//instruccion de freno
-				  Motor1_set(0,0); //00
-				  Motor2_set(0,0); //00
-			  }
-		  }
 		  if(Timeout > SYS_TIMEOUT)
 		  {
-			  //instrucciones de frenado
-			  Motor1_set(0,0); //00
+			  //timeout, braking, the system did not refresh the state
+			  Motor1_set(0,0);
 			  Motor2_set(0,0);
 			  Timeout = 0;
 			  Estado_sistema = SYS_READY;
 		  }
-		  //instruccion en ejecucion
 		  break;
 
 	  case SYS_WAIT:
-		  //sistema en pausa
+		  /*sys wait for future uses*/
 		  break;
 
 	  case SYS_ERROR:
-		  //error
+		  /*sys error, ToDo: add proper error codes for debugging purposes*/
 		  break;
 
 	  default:
@@ -250,7 +184,24 @@ int main(void)
 
 void initMotors(void)
 {
-	/*ToDo: set all the expected registers here*/
+	/*Init A dc motor*/
+	dc_motors[0].motor_dirA_port = MOT1_DIR1_PORT;
+	dc_motors[0].motor_dirA_pin = MOT1_DIR1_PIN;
+	dc_motors[0].motor_dirB_port = MOT1_DIR2_PORT;
+	dc_motors[0].motor_dirB_pin = MOT1_DIR2_PIN;
+	dc_motors[0].dutyCycleReg = &TIM4->CCR1;
+	dc_motors[0].lastDir = 0;
+	DCMotor_set(&motors[0], 0, 0);
+
+	/*Init B dc motor*/
+	dc_motors[1].motor_dirA_port = MOT2_DIR1_PORT;
+	dc_motors[1].motor_dirA_pin = MOT2_DIR1_PIN;
+	dc_motors[1].motor_dirB_port = MOT2_DIR2_PORT;
+	dc_motors[1].motor_dirB_pin = MOT2_DIR2_PIN;
+	dc_motors[1].dutyCycleReg = &TIM4->CCR2 = 0;
+	dc_motors[1].lastDir = 0;
+	DCMotor_set(&motors[1], 0, 0);
+
 }
 
 /*
@@ -275,6 +226,11 @@ int executeCommand(uint8_t * inputBuffer, uint32_t inputBuffLen)
 	int motorDir = 0;
 	int motorPower = 0;
 	char * motorPtr = NULL;
+	char outBuffer[30];
+	char outBufferLen = 0;
+	int16_t MagnetometerAngle;
+	float battery_voltage = 0.0;
+	int battery_charge = 0;
 
 	if(inputBuffLen < MIN_COMMAND_SIZE)
 	{
@@ -310,30 +266,42 @@ int executeCommand(uint8_t * inputBuffer, uint32_t inputBuffLen)
 			motorDir = 1;
 		}
 		motorPower = strtol(&Buffer[5],&ptr,10);/*InputBuffer ptr to tail, base of the number to parse*/
-		DCMotor_set(motors[motorAddr], motorDir, motorPower);
+		DCMotor_set(&motors[motorAddr], motorDir, motorPower);
 		return SUCCESS;
 	}
 	else if(memcmp(inputBuffer, READY_CMD,sizeof(READY_CMD)) == 0)
 	{
 		/* a ready command*/
+		DCMotor_set(&motors[0], 0, 0);
+		DCMotor_set(&motors[1], 0, 0);
+		return SUCCESS;
 	}
 	else if(memcmp(inputBuffer, BRAKE_CMD,sizeof(BRAKE_CMD)) == 0)
 	{
 		/* a braking command*/
+		DCMotor_set(&motors[0], 0, 0);
+		DCMotor_set(&motors[1], 0, 0);
+		return SUCCESS;
 	}
 
 	if(inputBuffLen <= 4)
 	{
-		return;
+		return FAILURE;
 	}
 
 	if (memcmp(inputBuffer, READ_CMD,sizeof(READ_CMD)) == 0)
 	{
 		/*reading current data for the system*/
+		MagnetometerAngle = HMC5883L_GetAngle();
+		battery_voltage = readBatteryVoltage(&hadc1);
+		battery_charge = getBatteryCharge(battery_voltage);
+		outBufferLen = sprintf(outBuffer ,"%d,%d,%d,%d,%d,%.1f,%d;",motors[0].lastDir,*(motors[0].dutyCycleReg),motors[1].lastDir,*(motors[1].dutyCycleReg),MagnetometerAngle,battery_voltage,battery_charge);
+		HAL_STM32_CDC_Transmit_FS(outBuffer, outBufferLen);
+		return SUCCESS;
 	}
 	else if(memcmp(inputBuffer, LAMP_CMD,sizeof(LAMP_CMD)) == 0)
 	{
-		/*lamp working*/
+		/*ToDo: implement led lamps for night driving assistant*/
 	}
 }
 

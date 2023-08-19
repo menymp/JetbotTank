@@ -23,6 +23,7 @@ typedef struct DC_MOTOR
 	uint32_t motor_dirB_pin = 0;
 	uint32_t motor_portB_pin = 0;
 	uint32_t * dutyCycleReg = NULL;
+	uint32_t lastDir = 0;
 };
 
 
@@ -43,6 +44,6 @@ typedef struct DC_MOTOR
 #define MOT2_DIR2_PIN	M2_B_Pin//5
 #define MOT2_DIR2_PORT	M2_B_GPIO_Port
 
-void DCMotor_set(DC_MOTOR dc_motor, uint32_t dir, uint32_t power);
+void DCMotor_set(DC_MOTOR *dc_motor, uint32_t dir, uint32_t power);
 
 #endif /* HAL_STM32_CONTROL_H_ */
