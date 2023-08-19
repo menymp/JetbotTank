@@ -16,7 +16,10 @@
 #define VBAT_MAX_VOLTAGE	12.6
 #define VBAT_MIN_VOLTAGE	3.4
 
-void readBatteryVoltage();
-void getBatteryCharge();
+#define ADC_FILTER_LEN		3
+
+float readBatteryVoltage(ADC_HandleTypeDef * adcHandle);
+int getBatteryCharge(float voltage);
+void swapSamples(float * array, uint16_t len, float newSample);
 
 #endif /* VBAT_ADC_H_ */

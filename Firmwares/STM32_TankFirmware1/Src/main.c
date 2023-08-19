@@ -31,6 +31,7 @@
 #include "HAL_STM32_CONTROL.h"
 #include "HMC5883L.h"
 #include "VBAT_Adc.h"
+#include "encoder_utils.h"
 
 #include "controlcmds.h"
 
@@ -39,6 +40,16 @@ int executeCommand(uint8_t * inputBuffer, uint32_t inputBuffLen);
 
 #define MOTOR_COUNT 2
 DC_MOTOR motors[MOTOR_COUNT];
+
+float currentVoltage  = 0.0;
+int currentChargePercent = 0;
+float currentEnc1Speed = 0.0;
+float currentEnc2Speed = 0.0;
+int16_t MagnetometerAngle;
+
+volatile int flag_compute = 0;
+volatile uint32_t countEnc1 = 0;
+volatile uint32_t countEnc2 = 0;
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -128,6 +139,8 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
+	  if(flag_compute) computeStates();
+
 	  switch(Estado_sistema)
 	  {
 	  case SYS_READY:
@@ -210,7 +223,12 @@ void initMotors(void)
  *
  * description:	parses a command and executes operations
  *
- * globals:		dc_motors		where to store motor register information
+ * globals:		dc_motors				where to store motor register information
+ * 				MagnetometerAngle		angle of magnetometer
+ * 				currentVoltage			current voltage of battery
+ * 				currentChargePercent	current charge percent
+ * 				currentEnc1Speed		current encoder speed 1
+ * 				currentEnc2Speed		current encoder speed 2
  *
  * parameters:	inputBuffer     buffer with input command to parse and execute
  * 				inputBufferLen  length of input buffer
@@ -227,9 +245,8 @@ int executeCommand(uint8_t * inputBuffer, uint32_t inputBuffLen)
 	int motorDir = 0;
 	int motorPower = 0;
 	char * motorPtr = NULL;
-	char outBuffer[30];
+	char outBuffer[50];
 	char outBufferLen = 0;
-	int16_t MagnetometerAngle;
 	float battery_voltage = 0.0;
 	int battery_charge = 0;
 
@@ -293,10 +310,7 @@ int executeCommand(uint8_t * inputBuffer, uint32_t inputBuffLen)
 	if (memcmp(inputBuffer, READ_CMD,sizeof(READ_CMD)) == 0)
 	{
 		/*reading current data for the system*/
-		MagnetometerAngle = HMC5883L_GetAngle();
-		battery_voltage = readBatteryVoltage(&hadc1);
-		battery_charge = getBatteryCharge(battery_voltage);
-		outBufferLen = sprintf(outBuffer ,"%d,%d,%d,%d,%d,%.1f,%d;",motors[0].lastDir,*(motors[0].dutyCycleReg),motors[1].lastDir,*(motors[1].dutyCycleReg),MagnetometerAngle,battery_voltage,battery_charge);
+		outBufferLen = sprintf(outBuffer ,"%d,%d,%d,%d,%d,%.1f,%d,%.1f,%.1f;",motors[0].lastDir,*(motors[0].dutyCycleReg),motors[1].lastDir,*(motors[1].dutyCycleReg),MagnetometerAngle,currentVoltage,currentChargePercent, currentEnc1Speed, currentEnc2Speed);
 		HAL_STM32_CDC_Transmit_FS(outBuffer, outBufferLen);
 		return SUCCESS;
 	}
@@ -306,6 +320,42 @@ int executeCommand(uint8_t * inputBuffer, uint32_t inputBuffLen)
 	}
 }
 
+
+/*
+ * name:		computeStates
+ *
+ * description:	computes the states when timer 2 interrupt raises the flag
+ * 				current states to compute:
+ * 					- odometry of dc motors
+ * 					- Internal battery voltage and charge
+ * 					- magnetometer angle
+ *
+ * globals:		hadc1			reference to adc for bat voltage
+ *				flag_compute	flag to handle new compute state
+ * parameters:	NONE
+ *
+ * returns:		NONE
+ *
+ * Autor:		menymp
+ */
+
+void computeStates()
+{
+	/*updates battery voltage and */
+	currentVoltage = updateVbatVoltage(&hadc1);
+	currentChargePercent = getBatteryCharge(currentVoltage);
+
+	/*computes magnetometer angle*/
+	MagnetometerAngle = HMC5883L_GetAngle();
+
+	/*computes odometer speeds and updates data*/
+	currentEnc1Speed = ( STEP_DISTANCE * countEnc1 ) / SAMPLING_PERIOD;
+	countEnc1 = 0;
+	currentEnc2Speed = ( STEP_DISTANCE * countEnc2 ) / SAMPLING_PERIOD;
+	countEnc2 = 0;
+	/*resets the flag*/
+	flag_compute = 0;
+}
 /**
   * @brief System Clock Configuration
   * @retval None
