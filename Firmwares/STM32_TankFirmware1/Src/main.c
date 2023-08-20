@@ -130,6 +130,7 @@ int main(void)
   MX_I2C3_Init();/////////HMC5883L
   MX_TIM2_Init();
   HMC5883L_Init();
+  initMotors();
   /* Initialize all configured peripherals */
   HAL_Delay(100);
   /* Infinite loop */
@@ -264,7 +265,7 @@ int executeCommand(char * inputBuffer, uint32_t inputBuffLen)
 		return FAILURE;
 	}
 
-	if (memcmp(inputBuffer, MOTOR_CMD,sizeof(MOTOR_CMD)) == 0)
+	if (memcmp(inputBuffer, MOTOR_CMD,sizeof(MOTOR_CMD) - 1) == 0)
 	{
 		/*A MOTOR COMMAND*/
 		/*012345678*/
@@ -276,11 +277,11 @@ int executeCommand(char * inputBuffer, uint32_t inputBuffLen)
 			return FAILURE;
 		}
 
-		if(inputBuffer[sizeof(MOTOR_CMD)] == 'A')
+		if(inputBuffer[sizeof(MOTOR_CMD) - 1] == 'A')
 		{
 			motorAddr = 0;
 		}
-		if(inputBuffer[sizeof(MOTOR_CMD)] == 'B')
+		if(inputBuffer[sizeof(MOTOR_CMD) - 1] == 'B')
 		{
 			motorAddr = 1;
 		}
@@ -293,18 +294,18 @@ int executeCommand(char * inputBuffer, uint32_t inputBuffLen)
 		{
 			motorDir = 1;
 		}
-		motorPower = strtol((const char *) &outBuffer[5],&motorPtr,10);/*InputBuffer ptr to tail, base of the number to parse*/
+		motorPower = strtol((const char *) &inputBuffer[5],&motorPtr,10);/*InputBuffer ptr to tail, base of the number to parse*/
 		DCMotor_set(&motors[motorAddr], motorDir, motorPower);
 		return SUCCESS;
 	}
-	else if(memcmp(inputBuffer, READY_CMD,sizeof(READY_CMD)) == 0)
+	else if(memcmp(inputBuffer, READY_CMD,sizeof(READY_CMD) - 1) == 0)
 	{
 		/* a ready command*/
 		DCMotor_set(&motors[0], 0, 0);
 		DCMotor_set(&motors[1], 0, 0);
 		return SUCCESS;
 	}
-	else if(memcmp(inputBuffer, BRAKE_CMD,sizeof(BRAKE_CMD)) == 0)
+	else if(memcmp(inputBuffer, BRAKE_CMD,sizeof(BRAKE_CMD) - 1) == 0)
 	{
 		/* a braking command*/
 		DCMotor_set(&motors[0], 0, 0);
@@ -318,14 +319,14 @@ int executeCommand(char * inputBuffer, uint32_t inputBuffLen)
 		return FAILURE;
 	}
 
-	if (memcmp(inputBuffer, READ_CMD,sizeof(READ_CMD)) == 0)
+	if (memcmp(inputBuffer, READ_CMD,sizeof(READ_CMD) - 1) == 0)
 	{
 		/*reading current data for the system*/
 		outBufferLen = sprintf(outBuffer ,"%lu,%lu,%lu,%lu,%d,%.1f,%d,%.1f,%.1f;",motors[0].lastDir,*(motors[0].dutyCycleReg),motors[1].lastDir,*(motors[1].dutyCycleReg),MagnetometerAngle,currentVoltage,currentChargePercent, currentEnc1Speed, currentEnc2Speed);
 		HAL_STM32_CDC_Transmit_FS( (uint8_t *) outBuffer, outBufferLen);
 		return SUCCESS;
 	}
-	else if(memcmp(inputBuffer, LAMP_CMD,sizeof(LAMP_CMD)) == 0)
+	else if(memcmp(inputBuffer, LAMP_CMD,sizeof(LAMP_CMD) - 1) == 0)
 	{
 		/*ToDo: implement led lamps for night driving assistant*/
 		sendError(ERR_NOT_IMPLEMENTED_CODE, ERR_NOT_IMPLEMENTED_MESSAGE, ERR_NOT_IMPLEMENTED_MESSAGE_LEN);
