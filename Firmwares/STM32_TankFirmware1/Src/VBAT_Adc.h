@@ -21,5 +21,6 @@
 float readBatteryVoltage(ADC_HandleTypeDef * adcHandle);
 int getBatteryCharge(float voltage);
 void swapSamples(float * array, uint16_t len, float newSample);
+float updateVbatVoltage(ADC_HandleTypeDef * adcHandle);
 
 #endif /* VBAT_ADC_H_ */
