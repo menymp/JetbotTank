@@ -32,13 +32,18 @@
 #include "HMC5883L.h"
 #include "VBAT_Adc.h"
 #include "encoder_utils.h"
-
+#include "debug_utils.h"
 #include "controlcmds.h"
 
 void initMotors(void);
 int executeCommand(uint8_t * inputBuffer, uint32_t inputBuffLen);
+void sendError(uint32_t errorCode, char *message, uint32_t messageLen);
 
-#define MOTOR_COUNT 2
+#define MOTOR_COUNT 	2
+#define IN_BUFFER_LEN	20
+#define OUT_BUFFER_LEN	50
+
+
 DC_MOTOR motors[MOTOR_COUNT];
 
 float currentVoltage  = 0.0;
@@ -93,12 +98,11 @@ void SystemClock_Config(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-	char Buffer[10];
-	uint32_t Len32 = 10;
+	char Buffer[IN_BUFFER_LEN];
+	uint32_t Len32 = IN_BUFFER_LEN;
   /* USER CODE END 1 */
 	uint32_t Timeout = 0;
-	//uint32_t Dir = 0;
-	uint32_t Pow = 0;
+
 	char *ptr;
   /* MCU Configuration--------------------------------------------------------*/
 	Sys_state Estado_sistema = SYS_READY;
@@ -147,10 +151,10 @@ int main(void)
 		  /*waiting for new instructions*/
 		  if(HAL_STM32_VCP_retrieveInputData((uint8_t *)Buffer,&Len32)!=0 && executeCommand(Buffer, Len32) == SUCCESS)
 		  {
-				  Timeout = 0;
-				  Estado_sistema = SYS_BUSY;
-		  }
 
+			  Timeout = 0;
+			  Estado_sistema = SYS_BUSY;
+		  }
 	  case SYS_BUSY:
 		  Timeout ++;
 		  if(Timeout > SYS_TIMEOUT)
@@ -160,6 +164,7 @@ int main(void)
 			  Motor2_set(0,0);
 			  Timeout = 0;
 			  Estado_sistema = SYS_READY;
+			  sendError(ERR_SYS_TIMEOUT_CODE, ERR_SYS_TIMEOUT_MESSAGE, ERR_SYS_TIMEOUT_MESSAGE_LEN);
 		  }
 		  break;
 
@@ -245,13 +250,19 @@ int executeCommand(uint8_t * inputBuffer, uint32_t inputBuffLen)
 	int motorDir = 0;
 	int motorPower = 0;
 	char * motorPtr = NULL;
-	char outBuffer[50];
+	char outBuffer[OUT_BUFFER_LEN];
 	char outBufferLen = 0;
 	float battery_voltage = 0.0;
 	int battery_charge = 0;
 
 	if(inputBuffLen < MIN_COMMAND_SIZE)
 	{
+		sendError(ERR_UNKNOWN_COMMAND_CODE, ERR_UNKNOWN_COMMAND_MESSAGE, ERR_UNKNOWN_COMMAND_MESSAGE_LEN);
+		return FAILURE;
+	}
+	if(inputBuffer[inputBuffLen - 1] != ';')
+	{
+		sendError(ERR_MISSING_TERMINATOR_CODE, ERR_MISSING_TERMINATOR_MESSAGE, ERR_MISSING_TERMINATOR_MESSAGE_LEN);
 		return FAILURE;
 	}
 
@@ -261,8 +272,9 @@ int executeCommand(uint8_t * inputBuffer, uint32_t inputBuffLen)
 		/*012345678*/
 		/*MOTAF22;*/
 		/*BUFF LEN 7*/
-		if(inputBuffLen < 7 || inputBuffer[inputBuffLen - 1] != ';')
+		if( inputBuffLen < 7 )
 		{
+			sendError(ERR_UNKNOWN_COMMAND_CODE, ERR_UNKNOWN_COMMAND_MESSAGE, ERR_UNKNOWN_COMMAND_MESSAGE_LEN);
 			return FAILURE;
 		}
 
@@ -304,6 +316,7 @@ int executeCommand(uint8_t * inputBuffer, uint32_t inputBuffLen)
 
 	if(inputBuffLen <= 4)
 	{
+		sendError(ERR_UNKNOWN_COMMAND_CODE, ERR_UNKNOWN_COMMAND_MESSAGE, ERR_UNKNOWN_COMMAND_MESSAGE_LEN);
 		return FAILURE;
 	}
 
@@ -317,9 +330,39 @@ int executeCommand(uint8_t * inputBuffer, uint32_t inputBuffLen)
 	else if(memcmp(inputBuffer, LAMP_CMD,sizeof(LAMP_CMD)) == 0)
 	{
 		/*ToDo: implement led lamps for night driving assistant*/
+		sendError(ERR_NOT_IMPLEMENTED_CODE, ERR_NOT_IMPLEMENTED_MESSAGE, ERR_NOT_IMPLEMENTED_MESSAGE_LEN);
+		return FAILURE;
 	}
+
+	sendError(ERR_UNKNOWN_COMMAND_CODE, ERR_UNKNOWN_COMMAND_MESSAGE, ERR_UNKNOWN_COMMAND_MESSAGE_LEN);
+	return FAILURE;
 }
 
+/*
+ * name:		sendError
+ *
+ * description:	returns an error message
+ *
+ * globals:		errorCode		a code asociated with an specific error
+ *				message			message to send
+ *				messageLen		len of message to print
+ *
+ * parameters:	NONE
+ *
+ * returns:		NONE
+ *
+ * Autor:		menymp
+ */
+
+void sendError(uint32_t errorCode, const char *message, uint32_t messageLen)
+{
+	char outBuffer[OUT_BUFFER_LEN];
+	char outBufferLen = 0;
+
+	outBufferLen = sprintf(outBuffer, "ERR,%d,%.*s;", errorCode, messageLen, message);
+
+	HAL_STM32_CDC_Transmit_FS(outBuffer, outBufferLen);
+}
 
 /*
  * name:		computeStates
@@ -356,6 +399,7 @@ void computeStates()
 	/*resets the flag*/
 	flag_compute = 0;
 }
+
 /**
   * @brief System Clock Configuration
   * @retval None

@@ -114,14 +114,14 @@ uint8_t I2C_ReadByte(uint8_t addr, uint8_t reg)
 {
 	uint8_t data = 0;
 	uint8_t d;
-	while (HAL_I2C_GetState(&hi2c1) != HAL_I2C_STATE_READY);
-	d = HAL_I2C_Master_Transmit(&hi2c1, addr << 1, &reg, 1, 100);
+	while (HAL_I2C_GetState(&hi2c3) != HAL_I2C_STATE_READY);
+	d = HAL_I2C_Master_Transmit(&hi2c3, addr << 1, &reg, 1, 100);
 	if ( d != HAL_OK) {
 		return d;
 	}
 
-	while (HAL_I2C_GetState(&hi2c1) != HAL_I2C_STATE_READY);
-	d = HAL_I2C_Master_Receive(&hi2c1, addr << 1, &data, 1, 100);
+	while (HAL_I2C_GetState(&hi2c3) != HAL_I2C_STATE_READY);
+	d = HAL_I2C_Master_Receive(&hi2c3, addr << 1, &data, 1, 100);
 	if ( d != HAL_OK) {
 		return d;
 	}
@@ -132,8 +132,8 @@ uint8_t I2C_WriteByte(uint8_t addr, uint8_t reg, uint8_t data)
 {
 	uint8_t buf[] = {reg, data};
 	uint8_t d;
-	while (HAL_I2C_GetState(&hi2c1) != HAL_I2C_STATE_READY);
-	d = HAL_I2C_Master_Transmit(&hi2c1, addr << 1, buf, 2, 100);
+	while (HAL_I2C_GetState(&hi2c3) != HAL_I2C_STATE_READY);
+	d = HAL_I2C_Master_Transmit(&hi2c3, addr << 1, buf, 2, 100);
 	if ( d != HAL_OK) {
 		return d;
 	}
