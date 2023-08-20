@@ -47,5 +47,5 @@ void HAL_STM32_InitPWM(void)
 void HAL_STM32_SetPWMDuty(uint32_t *dutyCycleId, uint32_t duty)
 {
 	//TIM4->CCR1 = Duty;
-	*dutyCycleId = Duty;
+	*dutyCycleId = duty;
 }

@@ -33,7 +33,7 @@ uint16_t HMC5883L_GetAngle(void) {
 	float angle, x, y, z = 0;
 
 
-	HAL_I2C_Mem_Read(&hi2c1, (uint16_t)HMC5883L_ADDRESS << 1, HMC5883L_RA_DATAX_H, 1, magBuf, 6, 0x100);
+	HAL_I2C_Mem_Read(&hi2c3, (uint16_t)HMC5883L_ADDRESS << 1, HMC5883L_RA_DATAX_H, 1, magBuf, 6, 0x100);
 
 	mx = (int16_t)magBuf[0]<<8 | magBuf[1];
 	mz = (int16_t)magBuf[2]<<8 | magBuf[3];

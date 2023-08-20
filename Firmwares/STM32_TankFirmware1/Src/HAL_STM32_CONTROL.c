@@ -31,17 +31,17 @@ void DCMotor_set(DC_MOTOR *dc_motor, uint32_t dir, uint32_t power)
 	if(power < 0) power = 0;
 	if(power > 100) power = 100;
 
-	if(Dir == 0)
+	if(dir == 0)
 	{
 		HAL_GPIO_WritePin(dc_motor->motor_dirA_port,dc_motor->motor_dirA_pin,RESET);
 		HAL_GPIO_WritePin(dc_motor->motor_dirB_port,dc_motor->motor_dirB_pin,RESET);
 	}
-	if(Dir == 1)
+	if(dir == 1)
 	{
 		HAL_GPIO_WritePin(dc_motor->motor_dirA_port,dc_motor->motor_dirA_pin,SET);
 		HAL_GPIO_WritePin(dc_motor->motor_dirB_port,dc_motor->motor_dirB_pin,RESET);
 	}
-	if(Dir == 2)
+	if(dir == 2)
 	{
 		HAL_GPIO_WritePin(dc_motor->motor_dirA_port,dc_motor->motor_dirA_pin,RESET);
 		HAL_GPIO_WritePin(dc_motor->motor_dirB_port,dc_motor->motor_dirB_pin,SET);

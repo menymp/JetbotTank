@@ -16,15 +16,14 @@ typedef enum System_state
 	SYS_READY
 }Sys_state;
 
-typedef struct DC_MOTOR
-{
-	uint32_t motor_dirA_pin = 0;
-	uint32_t motor_portA_pin = 0;
-	uint32_t motor_dirB_pin = 0;
-	uint32_t motor_portB_pin = 0;
-	uint32_t * dutyCycleReg = NULL;
-	uint32_t lastDir = 0;
-};
+typedef struct MOTOR_DC{
+	uint32_t motor_dirA_pin;
+	GPIO_TypeDef * motor_dirA_port;
+	uint32_t motor_dirB_pin;
+	GPIO_TypeDef * motor_dirB_port;
+	volatile uint32_t * dutyCycleReg;
+	uint32_t lastDir;
+} DC_MOTOR;
 
 
 #define SYS_TIMEOUT 	70

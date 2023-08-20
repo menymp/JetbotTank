@@ -36,8 +36,9 @@
 #include "controlcmds.h"
 
 void initMotors(void);
-int executeCommand(uint8_t * inputBuffer, uint32_t inputBuffLen);
-void sendError(uint32_t errorCode, char *message, uint32_t messageLen);
+int executeCommand(char * inputBuffer, uint32_t inputBuffLen);
+void sendError(int errorCode, const char *message, int messageLen);
+void computeStates();
 
 #define MOTOR_COUNT 	2
 #define IN_BUFFER_LEN	20
@@ -103,7 +104,6 @@ int main(void)
   /* USER CODE END 1 */
 	uint32_t Timeout = 0;
 
-	char *ptr;
   /* MCU Configuration--------------------------------------------------------*/
 	Sys_state Estado_sistema = SYS_READY;
 
@@ -160,8 +160,8 @@ int main(void)
 		  if(Timeout > SYS_TIMEOUT)
 		  {
 			  //timeout, braking, the system did not refresh the state
-			  Motor1_set(0,0);
-			  Motor2_set(0,0);
+			  DCMotor_set(&motors[0], 0, 0);
+			  DCMotor_set(&motors[1], 0, 0);
 			  Timeout = 0;
 			  Estado_sistema = SYS_READY;
 			  sendError(ERR_SYS_TIMEOUT_CODE, ERR_SYS_TIMEOUT_MESSAGE, ERR_SYS_TIMEOUT_MESSAGE_LEN);
@@ -204,21 +204,21 @@ int main(void)
 void initMotors(void)
 {
 	/*Init A dc motor*/
-	dc_motors[0].motor_dirA_port = MOT1_DIR1_PORT;
-	dc_motors[0].motor_dirA_pin = MOT1_DIR1_PIN;
-	dc_motors[0].motor_dirB_port = MOT1_DIR2_PORT;
-	dc_motors[0].motor_dirB_pin = MOT1_DIR2_PIN;
-	dc_motors[0].dutyCycleReg = &TIM4->CCR1;
-	dc_motors[0].lastDir = 0;
+	motors[0].motor_dirA_port = MOT1_DIR1_PORT;
+	motors[0].motor_dirA_pin = MOT1_DIR1_PIN;
+	motors[0].motor_dirB_port = MOT1_DIR2_PORT;
+	motors[0].motor_dirB_pin = MOT1_DIR2_PIN;
+	motors[0].dutyCycleReg = &TIM4->CCR1;
+	motors[0].lastDir = 0;
 	DCMotor_set(&motors[0], 0, 0);
 
 	/*Init B dc motor*/
-	dc_motors[1].motor_dirA_port = MOT2_DIR1_PORT;
-	dc_motors[1].motor_dirA_pin = MOT2_DIR1_PIN;
-	dc_motors[1].motor_dirB_port = MOT2_DIR2_PORT;
-	dc_motors[1].motor_dirB_pin = MOT2_DIR2_PIN;
-	dc_motors[1].dutyCycleReg = &TIM4->CCR2 = 0;
-	dc_motors[1].lastDir = 0;
+	motors[1].motor_dirA_port = MOT2_DIR1_PORT;
+	motors[1].motor_dirA_pin = MOT2_DIR1_PIN;
+	motors[1].motor_dirB_port = MOT2_DIR2_PORT;
+	motors[1].motor_dirB_pin = MOT2_DIR2_PIN;
+	motors[1].dutyCycleReg = &TIM4->CCR2;
+	motors[1].lastDir = 0;
 	DCMotor_set(&motors[1], 0, 0);
 
 }
@@ -243,7 +243,7 @@ void initMotors(void)
  * Autor:		menymp
  */
 
-int executeCommand(uint8_t * inputBuffer, uint32_t inputBuffLen)
+int executeCommand(char * inputBuffer, uint32_t inputBuffLen)
 {
 	/*misc variables for commands*/
 	int motorAddr = 0;
@@ -251,9 +251,7 @@ int executeCommand(uint8_t * inputBuffer, uint32_t inputBuffLen)
 	int motorPower = 0;
 	char * motorPtr = NULL;
 	char outBuffer[OUT_BUFFER_LEN];
-	char outBufferLen = 0;
-	float battery_voltage = 0.0;
-	int battery_charge = 0;
+	uint16_t outBufferLen = 0;
 
 	if(inputBuffLen < MIN_COMMAND_SIZE)
 	{
@@ -295,7 +293,7 @@ int executeCommand(uint8_t * inputBuffer, uint32_t inputBuffLen)
 		{
 			motorDir = 1;
 		}
-		motorPower = strtol(&Buffer[5],&ptr,10);/*InputBuffer ptr to tail, base of the number to parse*/
+		motorPower = strtol((const char *) &outBuffer[5],&motorPtr,10);/*InputBuffer ptr to tail, base of the number to parse*/
 		DCMotor_set(&motors[motorAddr], motorDir, motorPower);
 		return SUCCESS;
 	}
@@ -323,8 +321,8 @@ int executeCommand(uint8_t * inputBuffer, uint32_t inputBuffLen)
 	if (memcmp(inputBuffer, READ_CMD,sizeof(READ_CMD)) == 0)
 	{
 		/*reading current data for the system*/
-		outBufferLen = sprintf(outBuffer ,"%d,%d,%d,%d,%d,%.1f,%d,%.1f,%.1f;",motors[0].lastDir,*(motors[0].dutyCycleReg),motors[1].lastDir,*(motors[1].dutyCycleReg),MagnetometerAngle,currentVoltage,currentChargePercent, currentEnc1Speed, currentEnc2Speed);
-		HAL_STM32_CDC_Transmit_FS(outBuffer, outBufferLen);
+		outBufferLen = sprintf(outBuffer ,"%lu,%lu,%lu,%lu,%d,%.1f,%d,%.1f,%.1f;",motors[0].lastDir,*(motors[0].dutyCycleReg),motors[1].lastDir,*(motors[1].dutyCycleReg),MagnetometerAngle,currentVoltage,currentChargePercent, currentEnc1Speed, currentEnc2Speed);
+		HAL_STM32_CDC_Transmit_FS( (uint8_t *) outBuffer, outBufferLen);
 		return SUCCESS;
 	}
 	else if(memcmp(inputBuffer, LAMP_CMD,sizeof(LAMP_CMD)) == 0)
@@ -354,14 +352,14 @@ int executeCommand(uint8_t * inputBuffer, uint32_t inputBuffLen)
  * Autor:		menymp
  */
 
-void sendError(uint32_t errorCode, const char *message, uint32_t messageLen)
+void sendError(int errorCode, const char *message, int messageLen)
 {
 	char outBuffer[OUT_BUFFER_LEN];
 	char outBufferLen = 0;
 
 	outBufferLen = sprintf(outBuffer, "ERR,%d,%.*s;", errorCode, messageLen, message);
 
-	HAL_STM32_CDC_Transmit_FS(outBuffer, outBufferLen);
+	HAL_STM32_CDC_Transmit_FS( (uint8_t *) outBuffer, (uint16_t) outBufferLen);
 }
 
 /*
