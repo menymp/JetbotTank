@@ -37,6 +37,7 @@ extern I2C_HandleTypeDef hi2c3;
 /* USER CODE END Private defines */
 
 void MX_I2C3_Init(void);
+uint8_t I2C_WriteByte(uint8_t addr, uint8_t reg, uint8_t data);
 
 /* USER CODE BEGIN Prototypes */
 

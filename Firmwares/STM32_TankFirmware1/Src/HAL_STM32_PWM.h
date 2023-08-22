@@ -11,6 +11,6 @@
 #include "tim.h"
 
 void HAL_STM32_InitPWM(void);
-void HAL_STM32_SetPWMDuty(uint32_t *dutyCycleId, uint32_t duty);
+void HAL_STM32_SetPWMDuty(volatile uint32_t *dutyCycleId, uint32_t duty);
 
 #endif /* HAL_STM32_PWM_H_ */

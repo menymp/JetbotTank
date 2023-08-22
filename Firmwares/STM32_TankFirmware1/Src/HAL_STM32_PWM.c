@@ -44,7 +44,7 @@ void HAL_STM32_InitPWM(void)
  * Autor:		menymp
  */
 
-void HAL_STM32_SetPWMDuty(uint32_t *dutyCycleId, uint32_t duty)
+void HAL_STM32_SetPWMDuty(volatile uint32_t *dutyCycleId, uint32_t duty)
 {
 	//TIM4->CCR1 = Duty;
 	*dutyCycleId = duty;

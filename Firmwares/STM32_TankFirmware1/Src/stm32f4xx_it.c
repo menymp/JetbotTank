@@ -59,8 +59,8 @@
 extern PCD_HandleTypeDef hpcd_USB_OTG_FS;
 extern TIM_HandleTypeDef htim2;
 extern volatile int flag_compute;
-extern volatile uint32_t countEnc1 = 0;
-extern volatile uint32_t countEnc2 = 0;
+extern volatile uint32_t countEnc1;
+extern volatile uint32_t countEnc2;
 /* USER CODE BEGIN EV */
 
 /* USER CODE END EV */

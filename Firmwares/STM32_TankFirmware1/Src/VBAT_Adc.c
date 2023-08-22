@@ -87,12 +87,12 @@ float updateVbatVoltage(ADC_HandleTypeDef * adcHandle)
 	int index = 0;
 	float sum = 0.0;
 
-	swapSamples(samples, sizeof(samples), readBatteryVoltage(adcHandle));
+	swapSamples(samples, ADC_FILTER_LEN, readBatteryVoltage(adcHandle));
 
-	for(index = 0; index < sizeof(samples); index ++)
+	for(index = 0; index < ADC_FILTER_LEN; index ++)
 		sum += samples[index];
 
-	return (sum / sizeof(samples));
+	return (sum /((float) ADC_FILTER_LEN));
 }
 
 /*

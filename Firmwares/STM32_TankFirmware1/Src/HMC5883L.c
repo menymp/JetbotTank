@@ -29,19 +29,19 @@ void HMC5883L_Init(void) {
 uint16_t HMC5883L_GetAngle(void) {
 
 	uint8_t	magBuf[12] = {0};
-	int16_t mx, my, mz = 0;
-	float angle, x, y, z = 0;
+	int16_t mx, my = 0;
+	float angle, x, y = 0;
 
 
 	HAL_I2C_Mem_Read(&hi2c3, (uint16_t)HMC5883L_ADDRESS << 1, HMC5883L_RA_DATAX_H, 1, magBuf, 6, 0x100);
 
 	mx = (int16_t)magBuf[0]<<8 | magBuf[1];
-	mz = (int16_t)magBuf[2]<<8 | magBuf[3];
+	//mz = (int16_t)magBuf[2]<<8 | magBuf[3];
 	my = (int16_t)magBuf[4]<<8 | magBuf[5];
 
 	x = mx * 0.92;
 	y = my * 0.92;
-	z = mz * 0.92;
+	//z = mz * 0.92;
 
 	// Calculate angle
 	angle = atan2(y, x);
