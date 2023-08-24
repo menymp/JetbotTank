@@ -25,6 +25,9 @@ typedef struct MOTOR_DC{
 	uint32_t lastDir;
 } DC_MOTOR;
 
+typedef struct LAMP_D{
+	volatile uint32_t * dutyCycleReg;
+} D_LAMP;
 
 #define SYS_TIMEOUT 	70
 
@@ -44,5 +47,6 @@ typedef struct MOTOR_DC{
 #define MOT2_DIR2_PORT	M2_B_GPIO_Port
 
 void DCMotor_set(DC_MOTOR *dc_motor, uint32_t dir, uint32_t power);
+void Lamp_set(D_LAMP *lamp, uint32_t power);
 
 #endif /* HAL_STM32_CONTROL_H_ */

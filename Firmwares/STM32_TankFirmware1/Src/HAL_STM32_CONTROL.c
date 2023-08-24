@@ -51,6 +51,29 @@ void DCMotor_set(DC_MOTOR *dc_motor, uint32_t dir, uint32_t power)
 }
 
 /*
+ * name:		Lamp_set
+ *
+ * description:	sets parameters for lamp power duty cycle
+ *
+ * globals:		NONE
+ *
+ * parameters:	lamp			lamp definition register
+ * 				power			duty cycle from 0 to 100
+ *
+ * returns:		NONE
+ *
+ * Autor:		menymp
+ */
+
+void Lamp_set(D_LAMP *lamp, uint32_t power)
+{
+
+	if(power < 0) power = 0;
+	if(power > 100) power = 100;
+
+	HAL_STM32_SetPWMDuty(lamp->dutyCycleReg , power);
+}
+/*
 void Motor2_set(uint32_t addr, uint32_t Dir, uint32_t Power)
 {
 	if(Dir == 0)

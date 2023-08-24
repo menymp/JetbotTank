@@ -36,16 +36,19 @@
 #include "controlcmds.h"
 
 void initMotors(void);
+void initLamps(void);
 int executeCommand(char * inputBuffer, uint32_t inputBuffLen);
 void sendError(int errorCode, const char *message, int messageLen);
 void computeStates();
 
 #define MOTOR_COUNT 	2
+#define LAMP_COUNT 		2
 #define IN_BUFFER_LEN	20
 #define OUT_BUFFER_LEN	50
 
 
 DC_MOTOR motors[MOTOR_COUNT];
+D_LAMP lamps[LAMP_COUNT];
 
 float currentVoltage  = 0.0;
 int currentChargePercent = 0;
@@ -91,7 +94,7 @@ void SystemClock_Config(void);
 /* USER CODE BEGIN 0 */
 
 /* USER CODE END 0 */
-
+/*PWM PINS D12 D13 Motors, D14 D15 lamps*/
 /**
   * @brief  The application entry point.
   * @retval int
@@ -131,6 +134,7 @@ int main(void)
   MX_TIM2_Init();
   HMC5883L_Init();
   initMotors();
+  initLamps();
   /* Initialize all configured peripherals */
   HAL_Delay(100);
   /* Infinite loop */
@@ -225,6 +229,31 @@ void initMotors(void)
 }
 
 /*
+ * name:		initLamps
+ *
+ * description:	init lamps availables to the system
+ *
+ * globals:		lamps		where to store lamps register information
+ *
+ * parameters:	NONE
+ *
+ * returns:		NONE
+ *
+ * Autor:		menymp
+ */
+
+void initLamps(void)
+{
+	/*Init A lamp*/
+	lamps[0].dutyCycleReg = &TIM4->CCR3;
+	Lamp_set(&lamps[0], 0);
+
+	/*Init B lamp*/
+	lamps[1].dutyCycleReg = &TIM4->CCR4;
+	Lamp_set(&lamps[0], 0);
+}
+
+/*
  * name:		executeCommand
  *
  * description:	parses a command and executes operations
@@ -250,7 +279,10 @@ int executeCommand(char * inputBuffer, uint32_t inputBuffLen)
 	int motorAddr = 0;
 	int motorDir = 0;
 	int motorPower = 0;
+	int lampAddr = 0;
+	int lampPower = 0;
 	char * motorPtr = NULL;
+	char * lampPtr = NULL;
 	char outBuffer[OUT_BUFFER_LEN];
 	uint16_t outBufferLen = 0;
 
@@ -328,9 +360,23 @@ int executeCommand(char * inputBuffer, uint32_t inputBuffLen)
 	}
 	else if(memcmp(inputBuffer, LAMP_CMD,sizeof(LAMP_CMD) - 1) == 0)
 	{
-		/*ToDo: implement led lamps for night driving assistant*/
-		sendError(ERR_NOT_IMPLEMENTED_CODE, ERR_NOT_IMPLEMENTED_MESSAGE, ERR_NOT_IMPLEMENTED_MESSAGE_LEN);
-		return FAILURE;
+		if( inputBuffLen < 7 )
+		{
+			sendError(ERR_UNKNOWN_COMMAND_CODE, ERR_UNKNOWN_COMMAND_MESSAGE, ERR_UNKNOWN_COMMAND_MESSAGE_LEN);
+			return FAILURE;
+		}
+		if(inputBuffer[sizeof(LAMP_CMD) - 1] == 'A')
+		{
+			lampAddr = 0;
+		}
+		if(inputBuffer[sizeof(LAMP_CMD) - 1] == 'B')
+		{
+			lampAddr = 1;
+		}
+		lampPower = strtol((const char *) &inputBuffer[5],&lampPtr,10);/*InputBuffer ptr to tail, base of the number to parse*/
+		Lamp_set(&lamps[lampAddr], lampPower);
+		return SUCCESS;
+
 	}
 
 	sendError(ERR_UNKNOWN_COMMAND_CODE, ERR_UNKNOWN_COMMAND_MESSAGE, ERR_UNKNOWN_COMMAND_MESSAGE_LEN);
