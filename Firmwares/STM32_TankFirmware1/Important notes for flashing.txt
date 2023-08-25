@@ -1,0 +1,18 @@
+https://jeelabs.org/book/1547a/index.html
+
+The programming header pins are, top-to-bottom:
+
+VDD-TARGET             <--------Dont use this for power, use the 3.3v board arduino pin
+SWCLK
+GND
+SWDIO
+NRST
+SWO                     <------ NOT USED
+https://os.mbed.com/questions/83410/Can-I-program-an-external-board-using-SW/
+CN4 Connector on the NUCLEO-F103RB	STM32F401RBT6
+SWCLK (pin 2)	                        PA14
+GND (pin 3)	                        GND
+SWDIO (pin 4)	                        PA13
+NRST (pin 5)	                        NRST
+https://os.mbed.com/users/hudakz/code/STM32F103C8T6_Hello/
+
