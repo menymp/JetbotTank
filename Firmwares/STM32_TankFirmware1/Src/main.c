@@ -40,6 +40,7 @@ void initLamps(void);
 int executeCommand(char * inputBuffer, uint32_t inputBuffLen);
 void sendError(int errorCode, const char *message, int messageLen);
 void computeStates();
+void _float_to_char(float f, char *str, int precision);
 
 #define MOTOR_COUNT 	2
 #define LAMP_COUNT 		2
@@ -288,6 +289,9 @@ int executeCommand(char * inputBuffer, uint32_t inputBuffLen)
 	char * lampPtr = NULL;
 	char outBuffer[OUT_BUFFER_LEN];
 	uint16_t outBufferLen = 0;
+	char strVolts[10] = {0};
+	char strV1[10] = {0};
+	char strV2[10] = {0};
 
 	if(inputBuffLen < MIN_COMMAND_SIZE)
 	{
@@ -357,7 +361,11 @@ int executeCommand(char * inputBuffer, uint32_t inputBuffLen)
 	if (memcmp(inputBuffer, READ_CMD,sizeof(READ_CMD) - 1) == 0)
 	{
 		/*reading current data for the system*/
-		outBufferLen = sprintf(outBuffer ,"%lu,%lu,%lu,%lu,%d,%.1f,%d,%.1f,%.1f;\n",motors[0].lastDir,*(motors[0].dutyCycleReg),motors[1].lastDir,*(motors[1].dutyCycleReg),MagnetometerAngle,currentVoltage,currentChargePercent, currentEnc1Speed, currentEnc2Speed);
+		/*dtostrf(currentVoltage,4,2,strVolts);*/
+		_float_to_char(currentVoltage,strVolts, 2);
+		_float_to_char(currentEnc1Speed,strV1, 4);
+		_float_to_char(currentEnc2Speed,strV2, 4);
+		outBufferLen = sprintf(outBuffer ,"%lu,%lu,%lu,%lu,%d,%s,%d,%s,%s;\n",motors[0].lastDir,*(motors[0].dutyCycleReg),motors[1].lastDir,*(motors[1].dutyCycleReg),MagnetometerAngle,strVolts,currentChargePercent, strV1, strV2);
 		HAL_STM32_CDC_Transmit_FS( (uint8_t *) outBuffer, outBufferLen);
 		return SUCCESS;
 	}
@@ -410,6 +418,70 @@ void sendError(int errorCode, const char *message, int messageLen)
 	outBufferLen = sprintf(outBuffer, "ERR,%d,%.*s;", errorCode, messageLen, message);
 
 	HAL_STM32_CDC_Transmit_FS( (uint8_t *) outBuffer, (uint16_t) outBufferLen);
+}
+
+// convert float to string one decimal digit at a time
+// assumes float is < 65536 and ARRAYSIZE is big enough
+// problem: it truncates numbers at size without rounding
+// str is a char array to hold the result, float is the number to convert
+// size is the number of decimal digits you want
+
+
+void _float_to_char(float f, char *str, int precision)
+{
+	int a,b,c,k,l=0,m,i=0,j;
+
+	// check for negetive float
+	if(f<0.0)
+	{
+
+		str[i++]='-';
+		f*=-1;
+	}
+
+	a=f;	// extracting whole number
+	f-=a;	// extracting decimal part
+	k = precision;
+
+	// number of digits in whole number
+	while(k>-1)
+	{
+		l = pow(10,k);
+		m = a/l;
+		if(m>0)
+		{
+			break;
+		}
+	k--;
+	}
+
+	// number of digits in whole number are k+1
+
+	/*
+	extracting most significant digit i.e. right most digit , and concatenating to string
+	obtained as quotient by dividing number by 10^k where k = (number of digit -1)
+	*/
+
+	for(l=k+1;l>0;l--)
+	{
+		b = pow(10,l-1);
+		c = a/b;
+		str[i++]=c+48;
+		a%=b;
+	}
+	str[i++] = '.';
+
+	/* extracting decimal digits till precision */
+
+	for(l=0;l<precision;l++)
+	{
+		f*=10.0;
+		b = f;
+		str[i++]=b+48;
+		f-=b;
+	}
+
+	str[i]='\0';
 }
 
 /*

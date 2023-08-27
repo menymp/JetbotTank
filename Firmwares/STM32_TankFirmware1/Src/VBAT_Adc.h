@@ -11,10 +11,10 @@
 #include "adc.h"
 
 #define VBAT_ADC_REF_VOLT	3.3
-#define VBAT_SCALE_DIV		3.2 /*ToDo: read resistors and get the conversion factor*/
+#define VBAT_SCALE_DIV		91.266
 
-#define VBAT_MAX_VOLTAGE	12.6
-#define VBAT_MIN_VOLTAGE	3.4
+#define VBAT_MAX_VOLTAGE	12.3 /*acorded maximun voltage for a 4.1v x3*/
+#define VBAT_MIN_VOLTAGE	9.6	/*acorded minimun safe voltage 3.2v x3*/
 
 #define ADC_FILTER_LEN		3
 

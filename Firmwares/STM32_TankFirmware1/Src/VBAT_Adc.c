@@ -27,7 +27,7 @@ float readBatteryVoltage(ADC_HandleTypeDef * adcHandle)
 	HAL_ADC_Start(adcHandle); /*suposedly on continuous conversion mode*/
 	HAL_ADC_PollForConversion(adcHandle, HAL_MAX_DELAY);
 	raw = HAL_ADC_GetValue(adcHandle);
-	/*convert to float value*/
+	/*convert to float value for now 1.27v leads to 12.04v with a scale of 9.48*/
 	return raw * VBAT_SCALE_DIV * (VBAT_ADC_REF_VOLT / 65535);
 }
 
@@ -60,6 +60,7 @@ int getBatteryCharge(float voltage)
     voltage = roundf(voltage * 100) / 100;
     */
     output = ((voltage - VBAT_MIN_VOLTAGE) / (VBAT_MAX_VOLTAGE - VBAT_MIN_VOLTAGE)) * 100;
+    if (output < 0) output = 0;
     if (output < 100)
         return output;
     else
