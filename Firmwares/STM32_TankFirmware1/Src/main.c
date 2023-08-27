@@ -132,6 +132,7 @@ int main(void)
   MX_ADC1_Init();/////////VBAT
   MX_I2C3_Init();/////////HMC5883L
   MX_TIM2_Init();
+  MX_TIM4_Init();
   HMC5883L_Init();
   initMotors();
   initLamps();
@@ -140,6 +141,7 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   HAL_GPIO_WritePin(LED_BOARD_PORT,LED_BOARD_PIN,SET);
+  HAL_TIM_Base_Start_IT(&htim2);//iniciamos el timer
   /* USER CODE BEGIN 2 */
   /* USER CODE END 2 */
 
@@ -160,6 +162,7 @@ int main(void)
 			  Timeout = 0;
 			  Estado_sistema = SYS_BUSY;
 		  }
+		  break;
 	  case SYS_BUSY:
 		  Timeout ++;
 		  if(Timeout > SYS_TIMEOUT)
@@ -354,7 +357,7 @@ int executeCommand(char * inputBuffer, uint32_t inputBuffLen)
 	if (memcmp(inputBuffer, READ_CMD,sizeof(READ_CMD) - 1) == 0)
 	{
 		/*reading current data for the system*/
-		outBufferLen = sprintf(outBuffer ,"%lu,%lu,%lu,%lu,%d,%.1f,%d,%.1f,%.1f;",motors[0].lastDir,*(motors[0].dutyCycleReg),motors[1].lastDir,*(motors[1].dutyCycleReg),MagnetometerAngle,currentVoltage,currentChargePercent, currentEnc1Speed, currentEnc2Speed);
+		outBufferLen = sprintf(outBuffer ,"%lu,%lu,%lu,%lu,%d,%.1f,%d,%.1f,%.1f;\n",motors[0].lastDir,*(motors[0].dutyCycleReg),motors[1].lastDir,*(motors[1].dutyCycleReg),MagnetometerAngle,currentVoltage,currentChargePercent, currentEnc1Speed, currentEnc2Speed);
 		HAL_STM32_CDC_Transmit_FS( (uint8_t *) outBuffer, outBufferLen);
 		return SUCCESS;
 	}
