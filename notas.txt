@@ -21,6 +21,7 @@ etapa de robot 2.0
 	
 	-ambiente de ROS                                  OK
 	-GPS y nodo                                       OK
+	-Reforzar planta motriz							
 	-pruebas basicas con kinect
 	-pruebas basicas lidar                            OK
 	-encoders hmc5883l, medicion de bateria y nodo    OK
