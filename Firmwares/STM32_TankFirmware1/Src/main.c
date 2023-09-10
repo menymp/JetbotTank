@@ -133,7 +133,7 @@ int main(void)
   MX_ADC1_Init();/////////VBAT
   MX_I2C3_Init();/////////HMC5883L
   MX_TIM2_Init();
-  MX_TIM4_Init();
+  //MX_TIM4_Init(); DO NOT USE THIS BEFORE InitPWM, otherwise configs are overriden!!!!
   HMC5883L_Init();
   initMotors();
   initLamps();
@@ -165,6 +165,12 @@ int main(void)
 		  }
 		  break;
 	  case SYS_BUSY:
+		  if(HAL_STM32_VCP_retrieveInputData((uint8_t *)Buffer,&Len32)!=0 && executeCommand(Buffer, Len32) == SUCCESS)
+		  {
+
+			  Timeout = 0;
+			  Estado_sistema = SYS_BUSY;
+		  }
 		  Timeout ++;
 		  if(Timeout > SYS_TIMEOUT)
 		  {
@@ -327,14 +333,22 @@ int executeCommand(char * inputBuffer, uint32_t inputBuffLen)
 
 		if(inputBuffer[sizeof(MOTOR_CMD)] == 'F')
 		{
-			motorDir = 0;
+			motorDir = 1;
 		}
 		if(inputBuffer[sizeof(MOTOR_CMD)] == 'R')
 		{
-			motorDir = 1;
+			motorDir = 2;
 		}
 		motorPower = strtol((const char *) &inputBuffer[5],&motorPtr,10);/*InputBuffer ptr to tail, base of the number to parse*/
 		DCMotor_set(&motors[motorAddr], motorDir, motorPower);
+
+		/*HAL_GPIO_WritePin(MOT1_DIR1_PORT,MOT1_DIR1_PIN,SET);
+		HAL_GPIO_WritePin(MOT1_DIR2_PORT,MOT1_DIR2_PIN,SET);
+		TIM4->CCR1 = 90;
+		HAL_GPIO_WritePin(MOT2_DIR1_PORT,MOT2_DIR1_PIN,SET);
+		HAL_GPIO_WritePin(MOT2_DIR2_PORT,MOT2_DIR2_PIN,SET);
+		TIM4->CCR2 = 90;*/
+
 		return SUCCESS;
 	}
 	else if(memcmp(inputBuffer, READY_CMD,sizeof(READY_CMD) - 1) == 0)

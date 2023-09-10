@@ -25,8 +25,12 @@ void HAL_STM32_InitPWM(void)
 	MX_TIM4_Init();
 	HAL_TIM_PWM_Start(&htim4,TIM_CHANNEL_1);
 	HAL_TIM_PWM_Start(&htim4,TIM_CHANNEL_2);
+	HAL_TIM_PWM_Start(&htim4,TIM_CHANNEL_3);
+	HAL_TIM_PWM_Start(&htim4,TIM_CHANNEL_4);
 	TIM4->CCR2 = 0;
 	TIM4->CCR1 = 0;
+	TIM4->CCR3 = 0;
+	TIM4->CCR4 = 0;
 }
 
 /*
