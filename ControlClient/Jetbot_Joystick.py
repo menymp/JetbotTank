@@ -84,6 +84,7 @@ def userValuesMap(socketObj, configs, userCmds):
 		socketObj.send(mappedStr1)
 		time.sleep(0.05)
 		socketObj.send(mappedStr2)
+		time.sleep(0.05)
 	elif mode == "car":
 		mappedStr = carMode(cmd)
 		socketObj.send(mappedStr)
@@ -113,14 +114,14 @@ def tankMode(cmdObj):
 	POWER_M2 = int(abs(rightP*100))
 	
 	if(leftP < 0):
-		Dir1 = "MOTAR"+str(POWER_M1)
+		Dir1 = "MOTAR"+str(POWER_M1)+";"
 	else:
-		Dir1 = "MOTAF"+str(POWER_M1)
+		Dir1 = "MOTAF"+str(POWER_M1)+";"
 	
 	if(rightP < 0):
-		Dir2 = "MOTBR"+str(POWER_M2)
+		Dir2 = "MOTBR"+str(POWER_M2)+";"
 	else:
-		Dir2 = "MOTBF"+str(POWER_M2)
+		Dir2 = "MOTBF"+str(POWER_M2)+";"
 	
 	#print(CMD)
 	
