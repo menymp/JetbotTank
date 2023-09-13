@@ -287,11 +287,14 @@ int executeCommand(char * inputBuffer, uint32_t inputBuffLen)
 {
 	/*misc variables for commands*/
 	int motorAddr = 0;
-	int motorDir = 0;
-	int motorPower = 0;
+	int motorDir1 = 0;
+	int motorDir2 = 0;
+	int motorPower1 = 0;
+	int motorPower2 = 0;
 	int lampAddr = 0;
 	int lampPower = 0;
-	char * motorPtr = NULL;
+	char * motorPtr1 = NULL;
+	char * motorPtr2 = NULL;
 	char * lampPtr = NULL;
 	char outBuffer[OUT_BUFFER_LEN];
 	uint16_t outBufferLen = 0;
@@ -314,33 +317,44 @@ int executeCommand(char * inputBuffer, uint32_t inputBuffLen)
 	{
 		/*A MOTOR COMMAND*/
 		/*012345678*/
-		/*MOTAF22;*/
+		/*MOTFF2,2;*/
 		/*BUFF LEN 7*/
-		if( inputBuffLen < 7 )
+		if( inputBuffLen < 9 )
 		{
 			sendError(ERR_UNKNOWN_COMMAND_CODE, ERR_UNKNOWN_COMMAND_MESSAGE, ERR_UNKNOWN_COMMAND_MESSAGE_LEN);
 			return FAILURE;
 		}
 
-		if(inputBuffer[sizeof(MOTOR_CMD) - 1] == 'A')
+		if(inputBuffer[sizeof(MOTOR_CMD) - 1] == 'F')
 		{
-			motorAddr = 0;
+			motorDir1 = 1;
 		}
-		if(inputBuffer[sizeof(MOTOR_CMD) - 1] == 'B')
+		if(inputBuffer[sizeof(MOTOR_CMD) - 1] == 'R')
 		{
-			motorAddr = 1;
+			motorDir1 = 2;
 		}
 
 		if(inputBuffer[sizeof(MOTOR_CMD)] == 'F')
 		{
-			motorDir = 1;
+			motorDir2 = 1;
 		}
 		if(inputBuffer[sizeof(MOTOR_CMD)] == 'R')
 		{
-			motorDir = 2;
+			motorDir2 = 2;
 		}
-		motorPower = strtol((const char *) &inputBuffer[5],&motorPtr,10);/*InputBuffer ptr to tail, base of the number to parse*/
-		DCMotor_set(&motors[motorAddr], motorDir, motorPower);
+		motorPower1 = strtol((const char *) &inputBuffer[5],&motorPtr1,10);/*InputBuffer ptr to tail, base of the number to parse*/
+
+		if(*motorPtr != ',')
+		{
+			return FAILURE;
+		}
+		motorPower2 = strtol((const char *) motorPtr1,&motorPtr2,10);/*InputBuffer ptr to tail, base of the number to parse*/
+		if(*motorPtr1 != ';')
+		{
+			return FAILURE;
+		}
+		DCMotor_set(&motors[0], motorDir1, motorPower1);
+		DCMotor_set(&motors[1], motorDir2, motorPower2);
 
 		/*HAL_GPIO_WritePin(MOT1_DIR1_PORT,MOT1_DIR1_PIN,SET);
 		HAL_GPIO_WritePin(MOT1_DIR2_PORT,MOT1_DIR2_PIN,SET);

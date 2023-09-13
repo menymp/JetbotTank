@@ -80,11 +80,11 @@ def userValuesMap(socketObj, configs, userCmds):
 	mode = configs["joystickMode"]
 	cmd = userCmds[0]
 	if mode == "tank":
-		mappedStr1, mappedStr2 = tankMode(cmd)
+		mappedStr1 = tankMode(cmd)
 		socketObj.send(mappedStr1)
 		time.sleep(0.05)
-		socketObj.send(mappedStr2)
-		time.sleep(0.05)
+		#socketObj.send(mappedStr2)
+		#time.sleep(0.05)
 	elif mode == "car":
 		mappedStr = carMode(cmd)
 		socketObj.send(mappedStr)
@@ -112,22 +112,24 @@ def tankMode(cmdObj):
 	leftP,rightP = singleJoystickTransform(rawValP1,rawValP2)
 	POWER_M1 = int(abs(leftP*100))
 	POWER_M2 = int(abs(rightP*100))
-	
+	DirT = "MOT"
 	if(leftP < 0):
-		Dir1 = "MOTAR"+str(POWER_M1)+";"
+		DirT = DirT + "R"
 	else:
-		Dir1 = "MOTAF"+str(POWER_M1)+";"
+		DirT = DirT + "F"
 	
 	if(rightP < 0):
-		Dir2 = "MOTBR"+str(POWER_M2)+";"
+		DirT = DirT + "R"
 	else:
-		Dir2 = "MOTBF"+str(POWER_M2)+";"
+		DirT = DirT + "F"
+	
+	DirT = DirT + str(POWER_M1) + "," + str(POWER_M1) + ";"
 	
 	#print(CMD)
 	
 	#print("L R: " + str(leftP) + " " + str(rightP))
 	#s.send(CMD.encode("utf-8"))
-	return Dir1,Dir2
+	return DirT
 
 def carMode(cmdObj):
 	return str
