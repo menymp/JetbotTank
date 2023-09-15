@@ -82,7 +82,7 @@ def userValuesMap(socketObj, configs, userCmds):
 	if mode == "tank":
 		mappedStr1 = tankMode(cmd)
 		socketObj.send(mappedStr1)
-		time.sleep(0.05)
+		time.sleep(0.01)
 		#socketObj.send(mappedStr2)
 		#time.sleep(0.05)
 	elif mode == "car":
@@ -110,8 +110,8 @@ def tankMode(cmdObj):
 		elif key == "axis4":
 			rawValP2 = value
 	leftP,rightP = singleJoystickTransform(rawValP1,rawValP2)
-	POWER_M1 = int(abs(leftP*100))
-	POWER_M2 = int(abs(rightP*100))
+	POWER_M1 = int(abs(leftP*70))
+	POWER_M2 = int(abs(rightP*70))
 	DirT = "MOT"
 	if(leftP < 0):
 		DirT = DirT + "R"

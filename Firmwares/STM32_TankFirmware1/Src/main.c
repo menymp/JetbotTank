@@ -286,7 +286,7 @@ void initLamps(void)
 int executeCommand(char * inputBuffer, uint32_t inputBuffLen)
 {
 	/*misc variables for commands*/
-	int motorAddr = 0;
+	// int motorAddr = 0;
 	int motorDir1 = 0;
 	int motorDir2 = 0;
 	int motorPower1 = 0;
@@ -344,12 +344,12 @@ int executeCommand(char * inputBuffer, uint32_t inputBuffLen)
 		}
 		motorPower1 = strtol((const char *) &inputBuffer[5],&motorPtr1,10);/*InputBuffer ptr to tail, base of the number to parse*/
 
-		if(*motorPtr != ',')
+		if(*motorPtr1 != ',')
 		{
 			return FAILURE;
 		}
-		motorPower2 = strtol((const char *) motorPtr1,&motorPtr2,10);/*InputBuffer ptr to tail, base of the number to parse*/
-		if(*motorPtr1 != ';')
+		motorPower2 = strtol((const char *) &motorPtr1[1],&motorPtr2,10);/*InputBuffer ptr to tail, base of the number to parse*/
+		if(*motorPtr2 != ';')
 		{
 			return FAILURE;
 		}
