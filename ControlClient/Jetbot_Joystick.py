@@ -82,7 +82,7 @@ def userValuesMap(socketObj, configs, userCmds):
 	if mode == "tank":
 		mappedStr1 = tankMode(cmd)
 		socketObj.send(mappedStr1)
-		time.sleep(0.01)
+		#time.sleep(0.01)
 		#socketObj.send(mappedStr2)
 		#time.sleep(0.05)
 	elif mode == "car":
