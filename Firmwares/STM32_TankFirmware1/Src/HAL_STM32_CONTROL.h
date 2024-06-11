@@ -29,7 +29,7 @@ typedef struct LAMP_D{
 	volatile uint32_t * dutyCycleReg;
 } D_LAMP;
 
-#define SYS_TIMEOUT 	70
+#define SYS_TIMEOUT 	180
 
 #define LED_BOARD_PIN	LED_STATUS_Pin
 #define LED_BOARD_PORT	LED_STATUS_GPIO_Port

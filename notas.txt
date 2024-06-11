@@ -1,6 +1,16 @@
 links adc
 https://github.com/afiskon/stm32-adc-dac/tree/master/Src
 
+Donkey car github
+https://github.com/autorope/donkeycar/tree/main
+
+tutorial for ros creating packages
+https://www.youtube.com/watch?v=iLiI_IRedhI&list=PLuteWQUGtU9BU0sQIVqRQa24p-pSBCYNv&index=3
+
+rplidar and ros
+https://www.youtube.com/watch?v=Qrtz0a7HaQ4&list=PLuteWQUGtU9BU0sQIVqRQa24p-pSBCYNv&index=11
+https://github.com/NickL77/RPLidar_Hector_SLAM/tree/master
+
 Lista ToDo: 
 etapa de robot 2.0
 	se espera que el vehiculo este listo para operar y los nodos de control basicos
@@ -22,7 +32,7 @@ etapa de robot 2.0
 	-ambiente de ROS                                  OK
 	-GPS y nodo                                       OK
 	-Reforzar planta motriz							  OK
-	-pruebas basicas con kinect
+	-pruebas basicas con kinect						  OK
 	-pruebas basicas lidar                            OK
 	-encoders hmc5883l, medicion de bateria y nodo    OK
 
