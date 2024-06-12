@@ -131,6 +131,7 @@ source ./devel/setup.bash
 
 algunos paquetes externos se tienen que instalar, por ejemplo
 sudo apt-get install ros-melodic-serial
+sudo apt install qt4-default
 
 
 ########### para correr ros
