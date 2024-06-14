@@ -63,12 +63,12 @@ export ROS_IP="IP DEL DISPOSITIVO CON LIDAR"
 export ROS_MASTER_URI="http://IP DEL DISPOSITIVO CON LIDAR:11311"
 
 EN LA MAQUINA WINDOWS, correr el ejecutable ROS.exe
-export ROS_IP=IP DE WINDOWS SIN COMILLAS
+set ROS_IP=IP DE WINDOWS SIN COMILLAS
 !!!!SIN COMILLAS!!!!!!
-export ROS_MASTER_URI=http://IP DEL DISPOSITIVO CON LIDAR:11311
+set ROS_MASTER_URI=http://IP DEL DISPOSITIVO CON LIDAR:11311
 
 EN LA RASPBERRY O JETSON
-roscore &
+roscore &              // <<<<<< IMPORTANTE!!!!!
 ir al directorio con catkin_ws, en mi caso:
 cd ~/JetbotTank/ROS/catkin_ws
 agregar los sources para reconocer los nodos actuales
