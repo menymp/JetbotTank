@@ -156,4 +156,9 @@ rostopic echo /turtle/cmdvel
 ########## para correr un nodo que se ha creado, ir a la carpeta donde se ejecuto catkin_make
 source ./devel/setup.bash
 
+#### para correr un launch usar por ejemplo
+roslaunch hector_slam_launch tutorial.launch               (abre rviz y hector slam)
 
+### ROS Neato xv11 Hector slam lidar example
+
+https://github.com/JanezCim/Neato-XV-11-Hector-SLAM/tree/master
