@@ -162,3 +162,5 @@ roslaunch hector_slam_launch tutorial.launch               (abre rviz y hector s
 ### ROS Neato xv11 Hector slam lidar example
 
 https://github.com/JanezCim/Neato-XV-11-Hector-SLAM/tree/master
+
+https://github.com/njzhangyifei/xv11-hector-slam-roslaunch
