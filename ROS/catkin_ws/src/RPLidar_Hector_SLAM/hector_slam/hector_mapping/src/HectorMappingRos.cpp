@@ -225,7 +225,7 @@ HectorMappingRos::~HectorMappingRos()
   if(map__publish_thread_)
     delete map__publish_thread_;
 }
-
+/// ERROR THERE MENYYYYYYYY
 void HectorMappingRos::scanCallback(const sensor_msgs::LaserScan& scan)
 {
   if (hectorDrawings)
