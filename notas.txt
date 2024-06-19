@@ -164,3 +164,8 @@ roslaunch hector_slam_launch tutorial.launch               (abre rviz y hector s
 https://github.com/JanezCim/Neato-XV-11-Hector-SLAM/tree/master
 
 https://github.com/njzhangyifei/xv11-hector-slam-roslaunch
+
+
+
+# ROS image processing
+http://wiki.ros.org/stereo_image_proc/Tutorials/Using%20OpenCV%20for%20Image%20Processing
