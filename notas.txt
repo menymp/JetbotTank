@@ -165,7 +165,12 @@ https://github.com/JanezCim/Neato-XV-11-Hector-SLAM/tree/master
 
 https://github.com/njzhangyifei/xv11-hector-slam-roslaunch
 
+#Related to error timed out. Could not transform laser scan into base_frame.
 
+https://community.husarion.com/t/solved-timed-out-waiting-for-transform-from-base-link-to-map-during-map-navigation/1004/4
+
+seems to be related to sys timeout when distributed mode
+https://stackoverflow.com/questions/38983202/how-to-solve-lookup-transform-timed-out-between-various-frames
 
 # ROS image processing
 http://wiki.ros.org/stereo_image_proc/Tutorials/Using%20OpenCV%20for%20Image%20Processing
