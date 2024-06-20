@@ -169,3 +169,4 @@ https://github.com/njzhangyifei/xv11-hector-slam-roslaunch
 
 # ROS image processing
 http://wiki.ros.org/stereo_image_proc/Tutorials/Using%20OpenCV%20for%20Image%20Processing
+https://dabit-industries.github.io/turtlebot2-tutorials/14c-OpenCV2_CPP.html
