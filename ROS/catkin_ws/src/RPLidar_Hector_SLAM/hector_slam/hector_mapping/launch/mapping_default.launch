@@ -53,7 +53,7 @@
     
   <node pkg="tf" type="static_transform_publisher" name="map_to_odom" args="0.0 0.0 0.0 0 0 0.0 /odom /base_link 10"/>
 
-  <node pkg="tf" type="static_transform_publisher" name="base_frame_laser" args="0 0 0 0 0 0 /base_link /laser 10"/>
+  <node pkg="tf" type="static_transform_publisher" name="base_frame_laser" args="0 0 0 0 0 0 /base_link /neato_laser 10"/>
 
 </launch>
   
