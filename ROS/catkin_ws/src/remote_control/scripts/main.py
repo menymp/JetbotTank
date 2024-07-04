@@ -10,6 +10,10 @@ import sys
 import signal
 import time
 
+#ROS packages
+import rospy
+from std_msgs.msg import String
+
 from serialControl import serialControl
 from configsJetBotUtils import configsJetBotServerHandler
 #not yet on use, but usefull if need to know availabe serial ports on windows and linux
@@ -18,7 +22,6 @@ from CameraHttpServer import webcamIPServerHandle
 from cameraServerController import videoHandler
 
 serialObj = None
-socketConnObj = None
 
 def handleConfigs():
 	configs = loadConfigs()
@@ -72,56 +75,46 @@ def serialOpen(configs):
 	serialObj = serialControl()
 	serialObj.serialOpen(configs["portPath"],configs["serialBaudRate"],configs["serialTimeout"],configs["maxLen"])
 	return serialObj
-'''
-if there are aditional processing things to do or parsing from arguments
-those belong here
 
-	#ser.write(b'a,0,0#')
-	#print("detenido")
-	#time.sleep(2)
-	#ser.write(b'b,150,150#')
-	#print("adelante")
-	#time.sleep(2)
-'''
 def serialHandler(command):
 	print(command)
 	serialObj.write(command)
 	pass
- 
-def exitHandler(signum, frame):
-	socketConnObj.stop()
-	serialObj.serialClose()
-	exit(1)
 
 if __name__ == "__main__":
-	#sets the exit ctrl c signal
-	signal.signal(signal.SIGINT, exitHandler)
 	#obtains the current configs
 	configs = handleConfigs()
 	#opens serial controller
 	serialObj = serialOpen(configs)
 	#starts socket server for command handling
 
-	## ToDo: instead of the following lines, this would be a listener to some topic
-	#socketConnObj = socketConnectionHandler(configs, serialHandler)
-	#socketConnObj.start()
-	
+    # In ROS, nodes are uniquely named. If two nodes with the same
+    # name are launched, the previous one is kicked off. The
+    # anonymous=True flag means that rospy will choose a unique
+    # name for our 'listener' node so that multiple listeners can
+    # run simultaneously.
+	rospy.init_node('listener', anonymous=True)
+	rospy.Subscriber('chatter', String, serialHandler)
+
+    # spin() simply keeps python from exiting until this node is stopped
+	rospy.spin()
+	serialObj.serialClose()
 	#sleeps until end of program
-	while True:
-		time.sleep(1)
+	#while True:
+	#	time.sleep(1)
 		#webcamIPServerHandle('',8087) #old logic from 2018, unsuccessfully ported to python3
 		#new logic with Tornado 6
 		#check a way to manage multiple cams without threads
-		connectionArgs = {
-			"type": "picam",#can be local or picam for now
-			"port": 9090,
-			"width": 640,
-			"height": 480,
-			"camId":0,#ignore this for pi camera
-		}
-		videoHandlerObj = videoHandler(connectionArgs)
-		videoHandlerObj.serverListen()
-	print("ends")
+	#	connectionArgs = {
+	#		"type": "picam",#can be local or picam for now
+	#		"port": 9090,
+	#		"width": 640,
+	#		"height": 480,
+	#		"camId":0,#ignore this for pi camera
+	#	}
+	#	videoHandlerObj = videoHandler(connectionArgs)
+	#	videoHandlerObj.serverListen()
+	#print("ends")
 	pass
 #this class contains the logic to handle incoming connections from controller clients
 #for now only one
