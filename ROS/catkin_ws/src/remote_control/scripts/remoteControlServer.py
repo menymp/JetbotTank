@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 '''
 This file contains the working code for the jetbot tank
 
@@ -5,10 +6,15 @@ menymp 2023
 
 
 starts a web camera server and a websocket interface server for  command control
+
+History
+2024 Jul 07
+	adapted to ROS environment
 '''
 import sys
 import signal
 import time
+from threading import Thread, Event
 
 #ROS packages
 import rospy
@@ -16,9 +22,6 @@ from std_msgs.msg import String
 
 from serialControl import serialControl
 from configsJetBotUtils import configsJetBotServerHandler
-#not yet on use, but usefull if need to know availabe serial ports on windows and linux
-from serialPortUtills import serial_ports
-from CameraHttpServer import webcamIPServerHandle
 from cameraServerController import videoHandler
 
 serialObj = None
@@ -81,6 +84,18 @@ def serialHandler(command):
 	serialObj.write(command)
 	pass
 
+def taskVideoServer():
+	connectionArgs = {
+		"type": "picam",#can be local or picam for now
+		"port": 9090,
+		"width": 640,
+		"height": 480,
+		"camId":0,#ignore this for pi camera
+	}
+	videoHandlerObj = videoHandler(connectionArgs)
+	videoHandlerObj.serverListen()
+	pass
+
 if __name__ == "__main__":
 	#obtains the current configs
 	configs = handleConfigs()
@@ -93,68 +108,14 @@ if __name__ == "__main__":
     # anonymous=True flag means that rospy will choose a unique
     # name for our 'listener' node so that multiple listeners can
     # run simultaneously.
-	rospy.init_node('listener', anonymous=True)
-	rospy.Subscriber('chatter', String, serialHandler)
+	rospy.init_node('remoteControlServer', anonymous=True)
+	rospy.Subscriber('remote_control', String, serialHandler)
+
+	event = Event()
+	thread = Thread(target=taskVideoServer)
+	thread.start()
 
     # spin() simply keeps python from exiting until this node is stopped
 	rospy.spin()
 	serialObj.serialClose()
-	#sleeps until end of program
-	#while True:
-	#	time.sleep(1)
-		#webcamIPServerHandle('',8087) #old logic from 2018, unsuccessfully ported to python3
-		#new logic with Tornado 6
-		#check a way to manage multiple cams without threads
-	#	connectionArgs = {
-	#		"type": "picam",#can be local or picam for now
-	#		"port": 9090,
-	#		"width": 640,
-	#		"height": 480,
-	#		"camId":0,#ignore this for pi camera
-	#	}
-	#	videoHandlerObj = videoHandler(connectionArgs)
-	#	videoHandlerObj.serverListen()
-	#print("ends")
 	pass
-#this class contains the logic to handle incoming connections from controller clients
-#for now only one
-'''
-	
-	serv.start()
-	
-	for x in range(3):
-		data = serv.read(conn)
-		serv.write(conn,"received --->" + str(data))
-		time.sleep(2)
-	serv.stop()
-	pass
-'''
-
-
-
-'''
-ser = serial.Serial('/dev/ttyACM0')
-time.sleep(2)
-
-HOST = ''
-PORT = 8990
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-try:
-	s.bind((HOST,PORT))
-except socket.error as msg:
-	print('bind failed err')
-	exit()
-
-s.listen(10)
-print('ready')
-conn, addr = s.accept()
-
-while 1:
-	#conn, addr = s.accept()
-	data = conn.recv(100).decode()
-	BufferIn = str(data)
-	print(BufferIn)
-	ser.write(BufferIn.encode())
-	
-'''

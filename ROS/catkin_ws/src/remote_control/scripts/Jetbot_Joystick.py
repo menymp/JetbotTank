@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 menymp 24 jun 2023
 example use for now:
@@ -154,8 +155,8 @@ if __name__ == "__main__":
 	joystickUiObj = uiPygameJetbot()
 	joystickUiObj.pygameInit()
 
-	pub = rospy.Publisher('chatter', String, queue_size=10)
-	rospy.init_node('talker', anonymous=True)
+	pub = rospy.Publisher('remote_control', String, queue_size=10)
+	rospy.init_node('Jetbot_Joystick', anonymous=True)
 	rate = rospy.Rate(40) # 10hz
 	
 	while not rospy.is_shutdown():
