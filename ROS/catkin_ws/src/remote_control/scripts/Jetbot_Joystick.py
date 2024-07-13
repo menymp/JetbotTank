@@ -60,9 +60,10 @@ def saveNewConfigs(currentConfigs, additionalArgs):
 
 def parseLineCommands():	
 	#loop over each arg to build the relevant args list
+	args = rospy.get_param("/lineParameters").split(' ')
 	inputParameters = {
 	}
-	for argStr in sys.argv:
+	for argStr in args:
 		if argStr == "Jetbot_Joystick.py":
 			continue
 		argStr = argStr.replace(' ','')
@@ -155,8 +156,8 @@ if __name__ == "__main__":
 	joystickUiObj = uiPygameJetbot()
 	joystickUiObj.pygameInit()
 
-	pub = rospy.Publisher('remote_control', String, queue_size=10)
-	rospy.init_node('Jetbot_Joystick', anonymous=True)
+	pub = rospy.Publisher('remote_control', String, queue_size=10)#ToDo: parametrize this
+	rospy.init_node('Jetbot_Joystick', anonymous=True)#ToDo: parametrize this
 	rate = rospy.Rate(40) # 10hz
 	
 	while not rospy.is_shutdown():

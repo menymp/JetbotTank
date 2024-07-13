@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 '''
 This file contains the working code for the jetbot tank
 
@@ -39,9 +39,10 @@ def loadConfigs():
 
 def parseLineCommands():	
 	#loop over each arg to build the relevant args list
+	args = rospy.get_param("/lineParameters").split(' ')#ToDo: parametrize this
 	inputParameters = {
 	}
-	for argStr in sys.argv:
+	for argStr in args:
 		if argStr == "main.py":
 			continue
 		argStr = argStr.replace(' ','')
@@ -85,6 +86,7 @@ def serialHandler(command):
 	pass
 
 def taskVideoServer():
+	#ToDo: parametrize this
 	connectionArgs = {
 		"type": "picam",#can be local or picam for now
 		"port": 9090,

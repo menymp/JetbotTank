@@ -1,0 +1,5 @@
+<launch>
+    <node pkg="remote_control" type="Jetbot_Joystick.py" name="command_client_joystick" output="screen">
+        <param name="/lineParameters" type="string" value="--host= --videoPort=9090 --mode=tank --joystickMode=tank" />
+    </node>
+</launch>
