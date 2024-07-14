@@ -10,7 +10,7 @@ from threading import Timer
 import json
 import asyncio
 
-from BaseVideoService import jetsonPICameraService, localCameraService
+from remote_control.BaseVideoService import jetsonPICameraService, localCameraService
 
 class videoFeedHandler(tornado.web.RequestHandler):
 	def initialize(self, videoService):

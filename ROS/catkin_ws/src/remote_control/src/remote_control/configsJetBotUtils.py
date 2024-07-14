@@ -1,7 +1,7 @@
 '''
 reconverted form yapsc project, better to make a shared module if this will be repeated or not???
 '''
-from baseConfigs import baseConfigs
+from remote_control.baseConfigs import baseConfigs
 
 ALLOWED_CONN_PORTS = (8081, 10000) #MIN MAX buffer len for port
 SERIAL_TIMEOUT = (0.01,0.5)
