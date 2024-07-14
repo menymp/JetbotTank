@@ -39,7 +39,7 @@ def loadConfigs():
 
 def parseLineCommands():	
 	#loop over each arg to build the relevant args list
-	args = rospy.get_param("/lineParameters").split(' ')#ToDo: parametrize this
+	args = rospy.get_param("~lineParameters").split(' ')#ToDo: parametrize this
 	inputParameters = {
 	}
 	for argStr in args:
