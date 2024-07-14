@@ -20,9 +20,9 @@ from threading import Thread, Event
 import rospy
 from std_msgs.msg import String
 
-from serialControl import serialControl
-from configsJetBotUtils import configsJetBotServerHandler
-from cameraServerController import videoHandler
+from remote_control.serialControl import serialControl
+from remote_control.configsJetBotUtils import configsJetBotServerHandler
+from remote_control.cameraServerController import videoHandler
 
 serialObj = None
 

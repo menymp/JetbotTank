@@ -17,8 +17,8 @@ import sys
 import math
 sys.path.append("../JetbotServer")
 
-from joystickUtills import uiPygameJetbot
-from configsJetBotUtils import configsJetBotClientHandler
+from remote_control.joystickUtills import uiPygameJetbot
+from remote_control.configsJetBotUtils import configsJetBotClientHandler
 '''
 s = socket.socket()
 
