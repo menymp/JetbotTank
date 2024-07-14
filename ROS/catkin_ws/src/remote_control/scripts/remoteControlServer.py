@@ -64,7 +64,7 @@ def saveNewConfigs(currentConfigs, additionalArgs):
 		elif key == "--serialPath":
 			currentConfigs["portPath"] = value
 		elif key == "--serialTimeout":
-			currentConfigs["serialTimeout"] = int(value)
+			currentConfigs["serialTimeout"] = float(value)
 		elif key == "--serialBaudRate":
 			currentConfigs["serialBaudRate"] = int(value)
 		elif key == "--maxLen":
