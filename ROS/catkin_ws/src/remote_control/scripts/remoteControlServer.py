@@ -99,18 +99,18 @@ def taskVideoServer():
 	pass
 
 if __name__ == "__main__":
-	#obtains the current configs
-	configs = handleConfigs()
-	#opens serial controller
-	serialObj = serialOpen(configs)
-	#starts socket server for command handling
-
     # In ROS, nodes are uniquely named. If two nodes with the same
     # name are launched, the previous one is kicked off. The
     # anonymous=True flag means that rospy will choose a unique
     # name for our 'listener' node so that multiple listeners can
     # run simultaneously.
 	rospy.init_node('remoteControlServer', anonymous=True)
+	#obtains the current configs
+	configs = handleConfigs()
+	#opens serial controller
+	serialObj = serialOpen(configs)
+	#starts socket server for command handling
+
 	rospy.Subscriber('remote_control', String, serialHandler)
 
 	event = Event()

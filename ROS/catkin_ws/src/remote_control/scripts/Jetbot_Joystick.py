@@ -151,14 +151,14 @@ def singleJoystickTransform(x, y):
 #ToDo: add the single joystick mapper for the single joystick mode
 
 if __name__ == "__main__":
+	rospy.init_node('Jetbot_Joystick', anonymous=True)#ToDo: parametrize this
+	rate = rospy.Rate(40) # 10hz
 	configs = handleConfigs()
 
 	joystickUiObj = uiPygameJetbot()
 	joystickUiObj.pygameInit()
 
 	pub = rospy.Publisher('remote_control', String, queue_size=10)#ToDo: parametrize this
-	rospy.init_node('Jetbot_Joystick', anonymous=True)#ToDo: parametrize this
-	rate = rospy.Rate(40) # 10hz
 	
 	while not rospy.is_shutdown():
 		userCmds, exitSignal = joystickUiObj.loop()
