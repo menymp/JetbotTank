@@ -105,6 +105,8 @@ if __name__ == "__main__":
     # name for our 'listener' node so that multiple listeners can
     # run simultaneously.
 	rospy.init_node('remoteControlServer', anonymous=True)
+	rospy.loginfo("available parameters::::::")
+	rospy.loginfo(rospy.get_param_names())
 	#obtains the current configs
 	configs = handleConfigs()
 	#opens serial controller
