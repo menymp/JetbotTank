@@ -179,3 +179,9 @@ https://dabit-industries.github.io/turtlebot2-tutorials/14c-OpenCV2_CPP.html
 
 #ROS python package tutorial creation
 https://roboticsbackend.com/ros-import-python-module-from-another-package/
+
+#Other notes
+-noticed that 5v buck regulator only gave 4.9 volt, that would explain the resets when using the camera, recomended
+voltage for the 5mm barrel jack should be arround 5.2 volts, installing new regulator
+
+- a charge session was monitored, half of the charge detected and 2.5 amp initial current load testing
