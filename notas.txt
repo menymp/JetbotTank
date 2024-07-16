@@ -179,6 +179,7 @@ https://dabit-industries.github.io/turtlebot2-tutorials/14c-OpenCV2_CPP.html
 
 #ROS python package tutorial creation
 https://roboticsbackend.com/ros-import-python-module-from-another-package/
+https://github.com/daniel-robotics/ros_python_pkg/blob/main/scripts/example_py_script
 
 #Other notes
 -noticed that 5v buck regulator only gave 4.9 volt, that would explain the resets when using the camera, recomended
