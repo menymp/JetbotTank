@@ -185,4 +185,15 @@ https://github.com/daniel-robotics/ros_python_pkg/blob/main/scripts/example_py_s
 -noticed that 5v buck regulator only gave 4.9 volt, that would explain the resets when using the camera, recomended
 voltage for the 5mm barrel jack should be arround 5.2 volts, installing new regulator
 
+20240717 update 1: it seems that using the power mode:
+sudo nvpmodel -m 0
+creates a crash condition when attempting to stream from raspicam for example with:
+gst-launch-1.0 nvarguscamerasrc ! 'video/x-raw(memory:NVMM),width=3820, height=2464, framerate=21/1, format=NV12' ! nvvidconv flip-method=0 ! 'video/x-raw,width=960, height=616' ! nvvidconv ! nvegltransform ! nveglglessink -e
+after a second the raspicam will restart
+
+for now changing to 5w power mode solved the issue
+sudo nvpmodel -m 1
+
+lets see if the issue goes off when the new buck converter is installed...
+
 - a charge session was monitored, half of the charge detected and 2.5 amp initial current load testing
