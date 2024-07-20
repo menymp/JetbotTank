@@ -195,5 +195,6 @@ for now changing to 5w power mode solved the issue
 sudo nvpmodel -m 1
 
 lets see if the issue goes off when the new buck converter is installed...
+elevating the voltage to 5.15 volts solved the crash condition
 
 - a charge session was monitored, half of the charge detected and 2.5 amp initial current load testing
