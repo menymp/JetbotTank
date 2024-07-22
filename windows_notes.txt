@@ -1,0 +1,23 @@
+
+
+INICIALIZAR UN TOPICO EN RVIZ
+https://www.researchgate.net/figure/Steps-for-adding-new-information-for-rviz-to-display_fig3_302986850
+en windows las ip no llevan comillas, EJEMPLO:
+
+set ROS_IP=IPADDR
+set ROS_MASTER_URI=http://IPADDR
+
+https://www.youtube.com/watch?v=6R3rVeY3Sgc
+
+## build a single catkin node, ideal for windows
+catkin_make --only-pkg-with-deps remote_control
+
+rviz -d ./mapping_demo.rviz
+
+read this:
+we might use a ros bridge
+https://stackoverflow.com/questions/70257677/publish-rostopic-from-external-program
+
+possible alternative for windows and creating a windows bridge withour running ROS core
+https://roslibpy.readthedocs.io/en/latest/readme.html
+pip3 install roslibpy
