@@ -21,3 +21,16 @@ https://stackoverflow.com/questions/70257677/publish-rostopic-from-external-prog
 possible alternative for windows and creating a windows bridge withour running ROS core
 https://roslibpy.readthedocs.io/en/latest/readme.html
 pip3 install roslibpy
+
+#in the target raspberry py or jetson nano
+    ROS Setup
+    In order to use this library, your ROS environment needs to be setup to run rosbridge.
+
+    First install the rosbridge suite with the following commands:
+
+    sudo apt-get install -y ros-kinetic-rosbridge-server
+    sudo apt-get install -y ros-kinetic-tf2-web-republisher
+    And before starting a connection, make sure you launch all services:
+
+    roslaunch rosbridge_server rosbridge_websocket.launch
+    rosrun tf2_web_republisher tf2_web_republisher
