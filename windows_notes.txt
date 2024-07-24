@@ -28,9 +28,12 @@ pip3 install roslibpy
 
     First install the rosbridge suite with the following commands:
 
-    sudo apt-get install -y ros-kinetic-rosbridge-server
-    sudo apt-get install -y ros-kinetic-tf2-web-republisher
+    sudo apt-get install -y ros-melodic-rosbridge-server               #originaly this was ros-kinetic-rosbridge-server
+    sudo apt-get install -y ros-melodic-tf2-web-republisher            #originaly this was ros-kinetic-tf2-web-republisher
     And before starting a connection, make sure you launch all services:
 
-    roslaunch rosbridge_server rosbridge_websocket.launch
-    rosrun tf2_web_republisher tf2_web_republisher
+    roslaunch rosbridge_server rosbridge_websocket.launch &
+    rosrun tf2_web_republisher tf2_web_republisher &
+
+
+python Jetbot_Joystick.py --host= --videoPort=9090 --mode=tank --joystickMode=tank

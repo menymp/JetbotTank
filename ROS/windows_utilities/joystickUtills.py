@@ -134,7 +134,7 @@ class uiPygameJetbot():
 			#for each joystick
 			for idJoystick in range(joysticksCount):
 				joystick = pygame.joystick.Joystick(idJoystick)
-				joystick.init()
+				joystick.init() #could this be the proble,??? MENY
 				 
 				self.text_print.print(self.fscreen, "Joystick {}".format(idJoystick) )
 				self.text_print.indent()

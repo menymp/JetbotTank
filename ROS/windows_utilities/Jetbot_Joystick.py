@@ -172,11 +172,11 @@ if __name__ == "__main__":
 
 	talker = roslibpy.Topic(ros, '/remote_control', 'std_msgs/String')
 	
-	while ros.is_connected():
+	while ros.is_connected:
 		userCmds, exitSignal = joystickUiObj.loop()
 		mapCommand = userValuesMap(configs, userCmds)
-		print("output command: %s", mapCommand)
-		talker.publish(roslibpy.Message(mapCommand))
+		print("output command: ", mapCommand)
+		talker.publish(roslibpy.Message({'data':mapCommand}))
 		displayCamera(configs)
 	ros.terminate()
 	cv2.destroyAllWindows()
