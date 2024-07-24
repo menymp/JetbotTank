@@ -59,6 +59,15 @@ class uiPygameJetbot():
 		# Se prepara para imprimir
 		self.text_print = TextPrint()
 		self.quitSignal = False
+		
+		joysticksCount = self.getJoysticks()
+		self.printJoystickNum(joysticksCount)
+		self.detected_joysticks = []
+		
+		for idJoystick in range(joysticksCount):
+			joystick = pygame.joystick.Joystick(idJoystick)
+			joystick.init()
+			self.detected_joysticks.append(joystick)
 		pass
 	
 	def handleJoystickEvent(self):
@@ -127,28 +136,23 @@ class uiPygameJetbot():
 			self.handleJoystickEvent()
 			
 			self.clearScreens()
-			joysticksCount = self.getJoysticks()
-			self.printJoystickNum(joysticksCount)
 			
 			joysticksStates = []
 			#for each joystick
-			for idJoystick in range(joysticksCount):
-				joystick = pygame.joystick.Joystick(idJoystick)
-				joystick.init() #could this be the proble,??? MENY
-				 
+			for idJoystick in range(self.getJoysticks()):
 				self.text_print.print(self.fscreen, "Joystick {}".format(idJoystick) )
 				self.text_print.indent()
 				 
 				# get joystick name
-				self.text_print.print(self.fscreen, "joystick name: {}".format(joystick.get_name()))
+				self.text_print.print(self.fscreen, "joystick name: {}".format(self.detected_joysticks[idJoystick].get_name()))
 				
 				# axis goes in pairs, up/down and left/right for the other.
-				axisCount = joystick.get_numaxes()
+				axisCount = self.detected_joysticks[idJoystick].get_numaxes()
 				self.text_print.print(self.fscreen, "joystick count: {}".format(axisCount))
 				self.text_print.indent()
 				
 				#builds the current axis state for each detected joystick
-				response = self.buildJoystickResponses(axisCount, joystick , idJoystick)
+				response = self.buildJoystickResponses(axisCount, self.detected_joysticks[idJoystick] , idJoystick)
 				joysticksStates.append(response)
 				self.text_print.unindent()
 				#time.sleep(0.2)
