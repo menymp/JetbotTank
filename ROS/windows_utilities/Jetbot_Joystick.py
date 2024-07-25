@@ -164,7 +164,7 @@ def displayCamera(configs):
 if __name__ == "__main__":
 	configs = handleConfigs()
 	
-	ros = roslibpy.Ros(host=configs["host"], port=9090)
+	ros = roslibpy.Ros(host=configs["host"], port=configs["port"])
 	ros.run()
 
 	joystickUiObj = uiPygameJetbot()

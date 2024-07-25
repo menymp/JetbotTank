@@ -36,4 +36,4 @@ pip3 install roslibpy
     rosrun tf2_web_republisher tf2_web_republisher &
 
 
-python Jetbot_Joystick.py --host= --videoPort=9090 --mode=tank --joystickMode=tank
+python Jetbot_Joystick.py --host= --port=9090 --videoPort=8990 --mode=tank --joystickMode=tank
