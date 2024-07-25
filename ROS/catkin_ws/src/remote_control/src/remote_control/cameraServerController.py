@@ -53,6 +53,7 @@ class videoHandler():
 		}
 		'''
 		#
+		self.connArgs = args
 		if args["type"] == "local":
 			self.videoService = localCameraService(args)
 		elif args["type"] == "picam":
@@ -66,7 +67,7 @@ class videoHandler():
 	def serverListen(self):
 		asyncio.set_event_loop(asyncio.new_event_loop())
 		self.server = tornado.httpserver.HTTPServer(self.app)
-		self.server.listen(9090)
+		self.server.listen(self.connArgs["port"]) #parametrize this
 		tornado.ioloop.IOLoop.current().start()
 	
 	def _make_app(self, videoService):

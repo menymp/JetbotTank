@@ -85,11 +85,11 @@ def serialHandler(command):
 	serialObj.write(command)
 	pass
 
-def taskVideoServer():
+def taskVideoServer(configs):
 	#ToDo: parametrize this
 	connectionArgs = {
 		"type": "picam",#can be local or picam for now
-		"port": 8990, #parametrize this
+		"port": configs["path"],
 		"width": 640,
 		"height": 480,
 		"camId":0,#ignore this for pi camera
@@ -116,7 +116,7 @@ if __name__ == "__main__":
 	rospy.Subscriber('remote_control', String, serialHandler)
 
 	event = Event()
-	thread = Thread(target=taskVideoServer)
+	thread = Thread(target=taskVideoServer, args=(configs, ))
 	thread.start()
 
     # spin() simply keeps python from exiting until this node is stopped
