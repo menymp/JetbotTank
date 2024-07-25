@@ -81,7 +81,7 @@ def serialOpen(configs):
 	return serialObj
 
 def serialHandler(command):
-	cmd = str(command)
+	cmd = str(command["data"])
 	print(cmd)
 	serialObj.write(cmd)
 	pass
