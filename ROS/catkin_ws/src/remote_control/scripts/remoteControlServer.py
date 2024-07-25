@@ -89,7 +89,7 @@ def taskVideoServer(configs):
 	#ToDo: parametrize this
 	connectionArgs = {
 		"type": "picam",#can be local or picam for now
-		"port": configs["path"],
+		"port": configs["port"],
 		"width": 640,
 		"height": 480,
 		"camId":0,#ignore this for pi camera
