@@ -81,9 +81,9 @@ def serialOpen(configs):
 	return serialObj
 
 def serialHandler(command):
-	cmd = str(command["data"])
+	cmd = str(command)
 	print(cmd)
-	serialObj.write(cmd)
+	serialObj.write(command)
 	pass
 
 def taskVideoServer(configs):
