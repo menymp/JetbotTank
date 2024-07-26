@@ -103,8 +103,8 @@ def tankMode(cmdObj):
 	for key, value in cmdObj.items():
 		if key == "axis3":
 			rawValP1 = value
-		elif key == "axis4":
-			rawValP2 = value
+		elif key == "axis2":
+			rawValP2 = -value
 	leftP,rightP = singleJoystickTransform(rawValP1,rawValP2)
 	POWER_M1 = int(abs(leftP*70))
 	POWER_M2 = int(abs(rightP*70))
