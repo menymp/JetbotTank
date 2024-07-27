@@ -7,7 +7,7 @@ echo "ROS Jetbot server startup script"
 # source the ROS environment first
 source ./catkin_ws/devel/setup.bash
 # get local system ip
-ipaddr=$(ifconfig wlan0 | awk '/inet addr:/ {gsub("addr:","",$2); print $2}')
+ipaddr=$(ifconfig wlan0 | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 #export environment variables
 export ROS_IP="$ipaddr"
 export ROS_MASTER_URI="http://$ipaddr:11311"
