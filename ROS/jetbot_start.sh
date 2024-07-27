@@ -14,7 +14,7 @@ export ROS_MASTER_URI="http://$ipaddr:11311"
 
 # start the ros core process
 roscore &
-
+sleep 5
 # start ROS bridge services for windows communication
 roslaunch rosbridge_server rosbridge_websocket.launch &
 rosrun tf2_web_republisher tf2_web_republisher &
