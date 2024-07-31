@@ -106,8 +106,9 @@ def tankMode(cmdObj):
 		elif key == "axis2":
 			rawValP2 = -value
 	leftP,rightP = singleJoystickTransform(rawValP1,rawValP2)
-	POWER_M1 = int(abs(leftP*70))
-	POWER_M2 = int(abs(rightP*70))
+	POWER_M1 = int(abs(leftP*80)) + 30
+	POWER_M2 = int(abs(rightP*80)) + 30
+	#ToDo: implement a dead zone response  offset value to linealize from, test it
 	DirT = "MOT"
 	if(leftP < 0):
 		DirT = DirT + "R"
