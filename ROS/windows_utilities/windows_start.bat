@@ -13,8 +13,9 @@ set ROS_IP=%NetworkIP%
 set ROS_MASTER_URI=http://%1:11311
 
 rosparam set /use_sim_time false
-:: start lidar service
-rviz -d ./mapping_demo.rviz
 
 :: start windows jetbot joystick remote control client
-:: START /B %2 ./Jetbot_Joystick.py --host=%1 --port=9090 --videoPort=8990 --mode=tank --joystickMode=tank
+START /B python ./Jetbot_Joystick.py --host=%1 --port=9090 --videoPort=8990 --mode=tank --joystickMode=tank
+
+:: start lidar service
+START /B rviz -d ./mapping_demo.rviz

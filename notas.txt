@@ -88,6 +88,9 @@ en la opcion Size, cambiar el valor a 0.05
 y en la opcion Fixed Frame de Global Options cambiar map por neato_laser
 el mapa debe trazarse de inmediato
 
+en vistas usar TOp to down orto en rviz y setear origen a 0 0 0 X Y Z
+instalar paquetes en python ROS.exe
+
 ###########################
 
 #comandos de ros usados hasta el momento
