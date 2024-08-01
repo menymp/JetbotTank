@@ -201,3 +201,5 @@ lets see if the issue goes off when the new buck converter is installed...
 elevating the voltage to 5.15 volts solved the crash condition
 
 - a charge session was monitored, half of the charge detected and 2.5 amp initial current load testing
+
+test run completed successfully, SLAM seems to have problems keeping track of the position in realtime
