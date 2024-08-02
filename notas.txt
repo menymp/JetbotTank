@@ -206,3 +206,5 @@ test run completed successfully, SLAM seems to have problems keeping track of th
 research for frequence parameters
 https://www.youtube.com/watch?v=o9KzTR0vTXk
 https://answers.ros.org/question/78776/how-to-prevent-hector_mapping-from-losing-the-position-of-the-robot/
+possible clue to how to tune 
+https://answers.ros.org/question/263828/how-to-fine-tune-hector-mapping/
