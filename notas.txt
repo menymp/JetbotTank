@@ -208,3 +208,14 @@ https://www.youtube.com/watch?v=o9KzTR0vTXk
 https://answers.ros.org/question/78776/how-to-prevent-hector_mapping-from-losing-the-position-of-the-robot/
 possible clue to how to tune 
 https://answers.ros.org/question/263828/how-to-fine-tune-hector-mapping/
+hector slam parameter table
+https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9506160/
+some non tested parameters 
+https://github.com/njzhangyifei/xv11-hector-slam-roslaunch/blob/master/default_mapping.launch
+
+value config for tresh angle update
+https://robotics.stackexchange.com/questions/63968/the-map-is-incorrect
+
+more example data
+https://www.reddit.com/r/ROS/comments/4wxi6w/new_to_ros_having_problems_with_rplidar_and/
+http://www.ptolomeo.unam.mx:8080/xmlui/bitstream/handle/132.248.52.100/6467/tesis.pdf?sequence=1&isAllowed=y
