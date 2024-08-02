@@ -203,3 +203,6 @@ elevating the voltage to 5.15 volts solved the crash condition
 - a charge session was monitored, half of the charge detected and 2.5 amp initial current load testing
 
 test run completed successfully, SLAM seems to have problems keeping track of the position in realtime
+research for frequence parameters
+https://www.youtube.com/watch?v=o9KzTR0vTXk
+https://answers.ros.org/question/78776/how-to-prevent-hector_mapping-from-losing-the-position-of-the-robot/
