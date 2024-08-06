@@ -219,3 +219,8 @@ https://robotics.stackexchange.com/questions/63968/the-map-is-incorrect
 more example data
 https://www.reddit.com/r/ROS/comments/4wxi6w/new_to_ros_having_problems_with_rplidar_and/
 http://www.ptolomeo.unam.mx:8080/xmlui/bitstream/handle/132.248.52.100/6467/tesis.pdf?sequence=1&isAllowed=y
+
+returning to default map_update_angle_thresh = 0.9
+
+seems to have problems with handling fast rotations
+is there a way to feedback from a IMU ?
