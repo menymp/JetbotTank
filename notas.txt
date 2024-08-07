@@ -224,3 +224,5 @@ returning to default map_update_angle_thresh = 0.9
 
 seems to have problems with handling fast rotations
 is there a way to feedback from a IMU ?
+
+attempting to variate map_update_angle_thresh does not improve the accuracy at rotations
