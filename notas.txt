@@ -189,6 +189,7 @@ roslaunch opencv camerav2_320x240.launch enable_raw:=true
 #ROS python package tutorial creation
 https://roboticsbackend.com/ros-import-python-module-from-another-package/
 https://github.com/daniel-robotics/ros_python_pkg/blob/main/scripts/example_py_script
+https://answers.ros.org/question/363427/cv_bridge-with-custom-opencv-on-jetson-nano/
 
 #Other notes
 -noticed that 5v buck regulator only gave 4.9 volt, that would explain the resets when using the camera, recomended
