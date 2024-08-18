@@ -183,6 +183,9 @@ pip install cv-bridge
 rosrun rqt_image_view rqt_image_view
 
 
+#Use this command instead to run camera
+roslaunch opencv camerav2_320x240.launch enable_raw:=true
+
 #ROS python package tutorial creation
 https://roboticsbackend.com/ros-import-python-module-from-another-package/
 https://github.com/daniel-robotics/ros_python_pkg/blob/main/scripts/example_py_script
