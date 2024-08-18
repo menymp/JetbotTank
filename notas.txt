@@ -194,6 +194,9 @@ https://answers.ros.org/question/363427/cv_bridge-with-custom-opencv-on-jetson-n
 #for KINECT follow this tutorial
 https://www.youtube.com/watch?v=_QpNMJEAkX0
 
+#start to integrate odometry data
+https://answers.ros.org/question/418176/using-odometry-with-motor-encoders-and-visualize-in-rviz/
+
 #Other notes
 -noticed that 5v buck regulator only gave 4.9 volt, that would explain the resets when using the camera, recomended
 voltage for the 5mm barrel jack should be arround 5.2 volts, installing new regulator
