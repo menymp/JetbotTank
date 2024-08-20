@@ -205,6 +205,8 @@ cp audios.bin ~/.libfreenect/audios.bin
 sudo freenect-glview
 sudo freenect-micview
 
+
+roslaunch freenect_launch freenect.launch
 ###########################################################
 #start to integrate odometry data
 https://answers.ros.org/question/418176/using-odometry-with-motor-encoders-and-visualize-in-rviz/
