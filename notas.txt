@@ -191,9 +191,21 @@ https://roboticsbackend.com/ros-import-python-module-from-another-package/
 https://github.com/daniel-robotics/ros_python_pkg/blob/main/scripts/example_py_script
 https://answers.ros.org/question/363427/cv_bridge-with-custom-opencv-on-jetson-nano/
 
-#for KINECT follow this tutorial
+##################for KINECT follow this tutorial
 https://www.youtube.com/watch?v=_QpNMJEAkX0
 
+fw update steps
+sudo apt install ros-kinetic-depthimage-to-laserscan
+
+sudo apt install ros-kinetic-depthimage-to-laserscan
+cd /home/jetbot/JetbotTank/libfreenect/src/
+python fwfetcher.py
+mkdir ~/.libfreenect
+cp audios.bin ~/.libfreenect/audios.bin
+sudo freenect-glview
+sudo freenect-micview
+
+###########################################################
 #start to integrate odometry data
 https://answers.ros.org/question/418176/using-odometry-with-motor-encoders-and-visualize-in-rviz/
 
