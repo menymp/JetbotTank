@@ -214,9 +214,13 @@ rviz
  -- PointCloud2 (in by display type)
  -- in PointCloud2 select the topic /camera/depth_registered/points
  -- in global options fixed frame camera_link
+
+ https://roboticsweekends.blogspot.com/2017/12/how-to-connect-kinect-to-raspberry-pi-2.html
 ###########################################################
 #start to integrate odometry data
 https://answers.ros.org/question/418176/using-odometry-with-motor-encoders-and-visualize-in-rviz/
+
+https://github.com/EwingKang/Simple-ROS-Arduino-odometry
 
 #Other notes
 -noticed that 5v buck regulator only gave 4.9 volt, that would explain the resets when using the camera, recomended
