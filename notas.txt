@@ -205,8 +205,15 @@ cp audios.bin ~/.libfreenect/audios.bin
 sudo freenect-glview
 sudo freenect-micview
 
+sudo apt install ros-melodic-rgbd-launch
 
 roslaunch freenect_launch freenect.launch
+
+rviz
+ -- add (bottom right)
+ -- PointCloud2 (in by display type)
+ -- in PointCloud2 select the topic /camera/depth_registered/points
+ -- in global options fixed frame camera_link
 ###########################################################
 #start to integrate odometry data
 https://answers.ros.org/question/418176/using-odometry-with-motor-encoders-and-visualize-in-rviz/
