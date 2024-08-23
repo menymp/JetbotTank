@@ -6,7 +6,7 @@ class serialControl():
 		self.isDrvInit = False
 		pass
 	
-	def serialOpen(self, portPath, baudRate, timeout = 0.02, maxLen = 50):
+	def serialOpen(self, portPath, baudRate, timeout = 0.05, maxLen = 150):
 		self.maxLen = maxLen
 		self.timeout = timeout
 		self.serialDrv = serial.Serial(port = portPath, baudrate = baudRate, timeout = timeout)
@@ -35,6 +35,12 @@ class serialControl():
 		self.serialDrv.reset_output_buffer()
 		self.serialDrv.reset_input_buffer()
 		return response
+	
+	def available(self):
+		return self.serialDrv.in_waiting
+	
+	def readLine(self):
+		return self.serialDrv.readline(self.maxLen).decode(encoding='UTF-8')
 	
 	def write(self, cmd):
 		if (not self.isDrvInit or not self.serialDrv.is_open):
