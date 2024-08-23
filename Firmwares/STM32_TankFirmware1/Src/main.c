@@ -45,7 +45,7 @@ void _float_to_char(float f, char *str, int precision);
 #define MOTOR_COUNT 	2
 #define LAMP_COUNT 		2
 #define IN_BUFFER_LEN	20
-#define OUT_BUFFER_LEN	50
+#define OUT_BUFFER_LEN	150
 
 
 DC_MOTOR motors[MOTOR_COUNT];
@@ -53,8 +53,14 @@ D_LAMP lamps[LAMP_COUNT];
 
 float currentVoltage  = 0.0;
 int currentChargePercent = 0;
-float currentEnc1Speed = 0.0;
-float currentEnc2Speed = 0.0;
+float currentEnc1Distance = 0.0;
+float currentEnc2Distance = 0.0;
+int motorDir1 = 0;
+int motorDir2 = 0;
+
+int lastSampledMotorDir1 = 0;
+int lastSampledMotorDir2 = 0;
+
 int16_t MagnetometerAngle;
 
 volatile int flag_compute = 0;
@@ -151,7 +157,11 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-	  if(flag_compute) computeStates();
+	  if(flag_compute)
+	  {
+		executeCommand(READ_CMD, sizeof(READ_CMD) - 1);
+		computeStates();
+	  } 
 
 	  switch(Estado_sistema)
 	  {
@@ -272,8 +282,8 @@ void initLamps(void)
  * 				MagnetometerAngle		angle of magnetometer
  * 				currentVoltage			current voltage of battery
  * 				currentChargePercent	current charge percent
- * 				currentEnc1Speed		current encoder speed 1
- * 				currentEnc2Speed		current encoder speed 2
+ * 				currentEnc1Distance		current encoder speed 1
+ * 				currentEnc2Distance		current encoder speed 2
  *
  * parameters:	inputBuffer     buffer with input command to parse and execute
  * 				inputBufferLen  length of input buffer
@@ -287,8 +297,6 @@ int executeCommand(char * inputBuffer, uint32_t inputBuffLen)
 {
 	/*misc variables for commands*/
 	// int motorAddr = 0;
-	int motorDir1 = 0;
-	int motorDir2 = 0;
 	int motorPower1 = 0;
 	int motorPower2 = 0;
 	int lampAddr = 0;
@@ -391,8 +399,8 @@ int executeCommand(char * inputBuffer, uint32_t inputBuffLen)
 		/*reading current data for the system*/
 		/*dtostrf(currentVoltage,4,2,strVolts);*/
 		_float_to_char(currentVoltage,strVolts, 2);
-		_float_to_char(currentEnc1Speed,strV1, 4);
-		_float_to_char(currentEnc2Speed,strV2, 4);
+		_float_to_char(currentEnc1Distance,strV1, 4);
+		_float_to_char(currentEnc2Distance,strV2, 4);
 		outBufferLen = sprintf(outBuffer ,"%lu,%lu,%lu,%lu,%d,%s,%d,%s,%s;\n",motors[0].lastDir,*(motors[0].dutyCycleReg),motors[1].lastDir,*(motors[1].dutyCycleReg),MagnetometerAngle,strVolts,currentChargePercent, strV1, strV2);
 		HAL_STM32_CDC_Transmit_FS( (uint8_t *) outBuffer, outBufferLen);
 		return SUCCESS;
@@ -540,12 +548,53 @@ void computeStates()
 	MagnetometerAngle = HMC5883L_GetAngle();
 
 	/*computes odometer speeds and updates data*/
-	currentEnc1Speed = ( STEP_DISTANCE * countEnc1 ) / SAMPLING_PERIOD;
+	currentEnc1Distance =  STEP_DISTANCE * countEnc1 * SAMPLING_PERIOD;
 	countEnc1 = 0;
-	currentEnc2Speed = ( STEP_DISTANCE * countEnc2 ) / SAMPLING_PERIOD;
+	currentEnc2Distance =  STEP_DISTANCE * countEnc2 * SAMPLING_PERIOD;
 	countEnc2 = 0;
 	/*resets the flag*/
 	flag_compute = 0;
+
+	/* 
+	since the current encoders do not have a way to tell
+	the current direction, we would asume it by sampling the last command
+	direction
+
+	would this be better if calculated to the lead? 
+
+	/* ToDo: change the logic so this data is always published as a constant interval
+
+	publish both displacements and in the python module the changes would be calculated in the following order
+
+	with the last command for direction and displacement calculate the following
+
+	Davg = (currentEnc1Distance + currentEnc2Distance)/2
+
+	deltaTheta = (currentEnc1Distance - currentEnc2Distance)/ (track distance)
+
+	newTheta = actualTheta + deltaTheta
+
+	# Keep angle between -PI and PI  
+	if (newTheta> PI):
+		newTheta = newTheta - (2 * PI)
+	if (newTheta < -PI):
+		newTheta = newTheta + (2 * PI)
+
+	important to also use the angle to get a quaterion
+	create a quaterion representation
+	https://automaticaddison.com/how-to-convert-euler-angles-to-quaternions-using-python/
+
+	deltaX = Davg * cos(newTheta) 
+	deltaY = Davg * sin(newTheta)
+
+	X = X + deltaX
+	Y = Y + deltaY
+
+	convert to odom message
+
+	*/
+	lastSampledMotorDir1 = motorDir1;
+	lastSampledMotorDir2 = motorDir2;
 }
 
 /**

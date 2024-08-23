@@ -223,6 +223,9 @@ https://answers.ros.org/question/418176/using-odometry-with-motor-encoders-and-v
 https://github.com/EwingKang/Simple-ROS-Arduino-odometry
 http://wiki.ros.org/navigation/Tutorials/RobotSetup/Odom
 
+https://www.cs.columbia.edu/~allen/F17/NOTES/icckinematics.pdf
+https://automaticaddison.com/calculating-wheel-odometry-for-a-differential-drive-robot/
+
 #Other notes
 -noticed that 5v buck regulator only gave 4.9 volt, that would explain the resets when using the camera, recomended
 voltage for the 5mm barrel jack should be arround 5.2 volts, installing new regulator
