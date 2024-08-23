@@ -399,9 +399,9 @@ int executeCommand(char * inputBuffer, uint32_t inputBuffLen)
 		/*reading current data for the system*/
 		/*dtostrf(currentVoltage,4,2,strVolts);*/
 		_float_to_char(currentVoltage,strVolts, 2);
-		_float_to_char(currentEnc1Distance,strV1, 4);
-		_float_to_char(currentEnc2Distance,strV2, 4);
-		outBufferLen = sprintf(outBuffer ,"%lu,%lu,%lu,%lu,%d,%s,%d,%s,%s;\n",motors[0].lastDir,*(motors[0].dutyCycleReg),motors[1].lastDir,*(motors[1].dutyCycleReg),MagnetometerAngle,strVolts,currentChargePercent, strV1, strV2);
+		// _float_to_char(currentEnc1Distance,strV1, 4);
+		// _float_to_char(currentEnc2Distance,strV2, 4);
+		outBufferLen = sprintf(outBuffer ,"%lu,%lu,%lu,%lu,%d,%s,%d,%d,%d;\n",motors[0].lastDir,*(motors[0].dutyCycleReg),motors[1].lastDir,*(motors[1].dutyCycleReg),MagnetometerAngle,strVolts,currentChargePercent, currentEnc1Distance, currentEnc2Distance);
 		HAL_STM32_CDC_Transmit_FS( (uint8_t *) outBuffer, outBufferLen);
 		return SUCCESS;
 	}
@@ -548,9 +548,9 @@ void computeStates()
 	MagnetometerAngle = HMC5883L_GetAngle();
 
 	/*computes odometer speeds and updates data*/
-	currentEnc1Distance =  STEP_DISTANCE * countEnc1 * SAMPLING_PERIOD;
+	currentEnc1Distance =  countEnc1;
 	countEnc1 = 0;
-	currentEnc2Distance =  STEP_DISTANCE * countEnc2 * SAMPLING_PERIOD;
+	currentEnc2Distance =  countEnc2;
 	countEnc2 = 0;
 	/*resets the flag*/
 	flag_compute = 0;
