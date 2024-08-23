@@ -223,6 +223,9 @@ https://answers.ros.org/question/418176/using-odometry-with-motor-encoders-and-v
 https://github.com/EwingKang/Simple-ROS-Arduino-odometry
 http://wiki.ros.org/navigation/Tutorials/RobotSetup/Odom
 
+#python odom calculations
+https://gist.github.com/tronnayan/4544232160ba665e15ea4d57a3d139ca
+
 https://www.cs.columbia.edu/~allen/F17/NOTES/icckinematics.pdf
 https://automaticaddison.com/calculating-wheel-odometry-for-a-differential-drive-robot/
 
