@@ -87,8 +87,39 @@ def serialOpen(configs):
 def serialHandler(command):
 	cmd = command.data
 	print(cmd)
-	serialObj.write(cmd)
+	serialObj.write(accelerationRamp(cmd))
 	pass
+
+INCREMENT = 3
+#Use the update cmd as increment delay interval
+
+M1_POWER = 0
+M2_POWER = 0
+
+def accelerationRamp(newSetpointCmd):
+	tokens = (newSetpointCmd[5:])[:1].split(',') #remove MOTXX10,20; --> 10,20 --> ["10", "20"]
+	newMotorPower1 = int(tokens[0])
+	newMotorPower2 = int(tokens[1])
+
+	M1_POWER = calculateNewRampValue(M1_POWER, newMotorPower1)
+	M2_POWER = calculateNewRampValue(M2_POWER, newMotorPower2)
+	
+	cmd = newSetpointCmd[5:] + str(M1_POWER) + "," + str(M2_POWER) + ";"
+	return cmd
+
+def calculateNewRampValue(current_setpoint, new_setpoint):
+	if (current_setpoint == new_setpoint):
+		return new_setpoint
+	if (current_setpoint > new_setpoint ) and (current_setpoint - new_setpoint) < INCREMENT:
+		return new_setpoint
+	if (current_setpoint < new_setpoint ) and (new_setpoint - current_setpoint) < INCREMENT:
+		return new_setpoint
+	if (current_setpoint > new_setpoint ) and (current_setpoint - new_setpoint) >= INCREMENT:
+		return (current_setpoint - INCREMENT)
+	if (current_setpoint < new_setpoint ) and (new_setpoint - current_setpoint) >= INCREMENT:
+		return (current_setpoint + INCREMENT)
+	return current_setpoint
+
 
 def taskReadSerialData(serialObj):
 	while serialObj.isOpen():
@@ -222,6 +253,9 @@ if __name__ == "__main__":
 	event = Event()
 	thread = Thread(target=taskVideoServer, args=(configs, ))
 	thread.start()
+
+	serialDataThread = Thread(target=taskReadSerialData, args=(serialObj, ))
+	serialDataThread.start()
 
     # spin() simply keeps python from exiting until this node is stopped
 	rospy.spin()
