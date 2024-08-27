@@ -53,8 +53,8 @@ D_LAMP lamps[LAMP_COUNT];
 
 float currentVoltage  = 0.0;
 int currentChargePercent = 0;
-float currentEnc1Distance = 0.0;
-float currentEnc2Distance = 0.0;
+int currentEnc1Distance = 0;
+int currentEnc2Distance = 0;
 int motorDir1 = 0;
 int motorDir2 = 0;
 
@@ -307,8 +307,6 @@ int executeCommand(char * inputBuffer, uint32_t inputBuffLen)
 	char outBuffer[OUT_BUFFER_LEN];
 	uint16_t outBufferLen = 0;
 	char strVolts[10] = {0};
-	char strV1[10] = {0};
-	char strV2[10] = {0};
 
 	if(inputBuffLen < MIN_COMMAND_SIZE)
 	{
@@ -465,7 +463,7 @@ void sendError(int errorCode, const char *message, int messageLen)
 
 void _float_to_char(float f, char *str, int precision)
 {
-	int a,b,c,k,l=0,m,i=0,j;
+	int a,b,c,k,l=0,m,i=0;
 
 	// check for negetive float
 	if(f<0.0)
@@ -562,7 +560,7 @@ void computeStates()
 
 	would this be better if calculated to the lead? 
 
-	/* ToDo: change the logic so this data is always published as a constant interval
+	change the logic so this data is always published as a constant interval
 
 	publish both displacements and in the python module the changes would be calculated in the following order
 
