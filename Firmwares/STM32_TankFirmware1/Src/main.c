@@ -159,7 +159,7 @@ int main(void)
     /* USER CODE END WHILE */
 	  if(flag_compute)
 	  {
-		executeCommand(READ_CMD, sizeof(READ_CMD) - 1);
+		executeCommand("READ;", 5);
 		computeStates();
 	  } 
 
