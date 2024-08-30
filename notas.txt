@@ -277,3 +277,5 @@ attempting to variate map_update_angle_thresh does not improve the accuracy at r
 increase map resolution????
 
 implementing kinect and opencv research as a final of the current stage
+
+Note: new firmware flashed, testing it

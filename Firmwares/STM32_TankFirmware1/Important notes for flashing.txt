@@ -2,10 +2,10 @@ https://jeelabs.org/book/1547a/index.html
 
 The programming header pins are, top-to-bottom:
 
-VDD-TARGET             <--------Dont use this for power, use the 3.3v board arduino pin
+VDD-TARGET             <--------Dont use this for power, use the 3.3v board arduino pin, in the black pill, this pin is the one near the 3.3 v label
 SWCLK
 GND
-SWDIO
+SWDIO                   <----------- remember that stm32f411 is inverted , use as a reference the labels at the bottom
 NRST
 SWO                     <------ NOT USED
 https://os.mbed.com/questions/83410/Can-I-program-an-external-board-using-SW/
