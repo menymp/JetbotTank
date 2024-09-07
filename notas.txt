@@ -279,3 +279,7 @@ increase map resolution????
 implementing kinect and opencv research as a final of the current stage
 
 Note: new firmware flashed, testing it, fixed info issue
+
+# MPU9250 Fuse algoritm
+https://github.com/CCNYRoboticsLab/imu_tools
+https://github.com/pcdangio/ros-driver_mpu9250
