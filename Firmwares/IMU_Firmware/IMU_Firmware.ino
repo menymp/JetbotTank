@@ -1,105 +1,98 @@
-/*
-IMU_Firmware
+// I2C device class (I2Cdev) demonstration Arduino sketch for MPU9150
+// 1/4/2013 original by Jeff Rowberg <jeff@rowberg.net> at https://github.com/jrowberg/i2cdevlib
+//          modified by Aaron Weiss <aaron@sparkfun.com>
+//
+// Changelog:
+//     2011-10-07 - initial release
+//     2013-1-4 - added raw magnetometer output
 
-firmware for arduino pro mini microcontroller board and mpu9250
+/* ============================================
+I2Cdev device library code is placed under the MIT license
 
-this is expected to provide the accelerometer an gyroscope info for the jetbot
-oddometry
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-menymp
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
 
-Sept 2024
-
-In progress
-
-Pinout:
-Arduino 
-Pro Micro    MPU-9250
-pin 2  ----- SDA
-pin 3  ----- SCL
-pin 7  ----- INT
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+===============================================
 */
-#include "mpu9250.h"
 
-/* Mpu9250 object */
-bfs::Mpu9250 imu;
+// Arduino Wire library is required if I2Cdev I2CDEV_ARDUINO_WIRE implementation
+// is used in I2Cdev.h
+#include "Wire.h"
+
+// I2Cdev and MPU6050 must be installed as libraries, or else the .cpp/.h files
+// for both classes must be in the include path of your project
+#include "I2Cdev.h"
+#include "MPU6050.h"
+
+// class default I2C address is 0x68
+// specific I2C addresses may be passed as a parameter here
+// AD0 low = 0x68 (default for InvenSense evaluation board)
+// AD0 high = 0x69
+MPU6050 accelgyro;
+
+int16_t ax, ay, az;
+int16_t gx, gy, gz;
+int16_t mx, my, mz;
+
+#define LED_PIN 13
+bool blinkState = false;
 
 void setup() {
-  /* Serial to display data */
-  Serial.begin(115200);
-  while(!Serial) {}
-  /* Start the I2C bus */
-  Wire.begin();
-  Wire.setClock(400000);
-  /* I2C bus,  0x68 address */
-  imu.Config(&Wire, bfs::Mpu9250::I2C_ADDR_PRIM);
-  /* Initialize and configure IMU */
-  if (!imu.Begin()) {
-    Serial.println("Error initializing communication with IMU");
-    while(1) {}
-  }
-  /* Set the sample rate divider */
-  if (!imu.ConfigSrd(19)) {
-    Serial.println("Error configured SRD");
-    while(1) {}
-  }
+    // join I2C bus (I2Cdev library doesn't do this automatically)
+    Wire.begin();
+
+    // initialize serial communication
+    // (38400 chosen because it works as well at 8MHz as it does at 16MHz, but
+    // it's really up to you depending on your project)
+    Serial.begin(115200);
+
+    // initialize device
+    Serial.println("Initializing I2C devices...");
+    accelgyro.initialize();
+
+    // verify connection
+    Serial.println("Testing device connections...");
+    Serial.println(accelgyro.testConnection() ? "MPU6050 connection successful" : "MPU6050 connection failed");
+
+    // configure Arduino LED for
+    pinMode(LED_PIN, OUTPUT);
 }
 
 void loop() {
-  /* Check if data read */
-  if (imu.Read()) {
-    Serial.print(imu.new_imu_data());
-    Serial.print("\t");
-    Serial.print(imu.new_mag_data());
-    Serial.print("\t");
-    Serial.print(imu.accel_x_mps2());
-    Serial.print("\t");
-    Serial.print(imu.accel_y_mps2());
-    Serial.print("\t");
-    Serial.print(imu.accel_z_mps2());
-    Serial.print("\t");
-    Serial.print(imu.gyro_x_radps());
-    Serial.print("\t");
-    Serial.print(imu.gyro_y_radps());
-    Serial.print("\t");
-    Serial.print(imu.gyro_z_radps());
-    Serial.print("\t");
-    Serial.print(imu.mag_x_ut());
-    Serial.print("\t");
-    Serial.print(imu.mag_y_ut());
-    Serial.print("\t");
-    Serial.print(imu.mag_z_ut());
-    Serial.print("\t");
-    Serial.print(imu.die_temp_c());
-    Serial.print("\n");
-  }
-}
+    // read raw accel/gyro measurements from device
+    accelgyro.getMotion9(&ax, &ay, &az, &gx, &gy, &gz, &mx, &my, &mz);
 
+    // these methods (and a few others) are also available
+    //accelgyro.getAcceleration(&ax, &ay, &az);
+    //accelgyro.getRotation(&gx, &gy, &gz);
 
+    // display tab-separated accel/gyro x/y/z values
+    Serial.print("a/g/m:\t");
+    Serial.print(ax); Serial.print("\t");
+    Serial.print(ay); Serial.print("\t");
+    Serial.print(az); Serial.print("\t");
+    Serial.print(gx); Serial.print("\t");
+    Serial.print(gy); Serial.print("\t");
+    Serial.print(gz); Serial.print("\t");
+    Serial.print(mx); Serial.print("\t");
+    Serial.print(my); Serial.print("\t");
+    Serial.println(mz);
 
-
-void loop() {
-  // read the sensor
-  IMU.readSensor();
-  // display the data
-  Serial.print(IMU.getAccelX_mss(), 6);
-  Serial.print("\t");
-  Serial.print(IMU.getAccelY_mss(), 6);
-  Serial.print("\t");
-  Serial.print(IMU.getAccelZ_mss(), 6);
-  Serial.print("\t");
-  Serial.print(IMU.getGyroX_rads(), 6);
-  Serial.print("\t");
-  Serial.print(IMU.getGyroY_rads(), 6);
-  Serial.print("\t");
-  Serial.print(IMU.getGyroZ_rads(), 6);
-  Serial.print("\t");
-  Serial.print(IMU.getMagX_uT(), 6);
-  Serial.print("\t");
-  Serial.print(IMU.getMagY_uT(), 6);
-  Serial.print("\t");
-  Serial.print(IMU.getMagZ_uT(), 6);
-  Serial.print("\t");
-  Serial.println(IMU.getTemperature_C(), 6);
-  delay(100);
+    // blink LED to indicate activity
+    blinkState = !blinkState;
+    digitalWrite(LED_PIN, blinkState);
 }
