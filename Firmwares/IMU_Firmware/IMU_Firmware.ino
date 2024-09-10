@@ -81,18 +81,19 @@ void loop() {
     //accelgyro.getRotation(&gx, &gy, &gz);
 
     // display tab-separated accel/gyro x/y/z values
-    Serial.print("a/g/m:\t");
-    Serial.print(ax); Serial.print("\t");
-    Serial.print(ay); Serial.print("\t");
-    Serial.print(az); Serial.print("\t");
-    Serial.print(gx); Serial.print("\t");
-    Serial.print(gy); Serial.print("\t");
-    Serial.print(gz); Serial.print("\t");
-    Serial.print(mx); Serial.print("\t");
-    Serial.print(my); Serial.print("\t");
+    Serial.print("a/g/m:");
+    Serial.print(ax); Serial.print(",");
+    Serial.print(ay); Serial.print(".");
+    Serial.print(az); Serial.print(",");
+    Serial.print(gx); Serial.print(",");
+    Serial.print(gy); Serial.print(",");
+    Serial.print(gz); Serial.print(",");
+    Serial.print(mx); Serial.print(",");
+    Serial.print(my); Serial.print(",");
     Serial.println(mz);
 
     // blink LED to indicate activity
     blinkState = !blinkState;
     digitalWrite(LED_PIN, blinkState);
+    delay(10);
 }
