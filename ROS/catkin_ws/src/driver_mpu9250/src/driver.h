@@ -55,7 +55,7 @@ public:
         float accel_x, accel_y, accel_z;
         float gyro_x, gyro_y, gyro_z;
         float magneto_x, magneto_y, magneto_z;
-        float temp;
+        //float temp;
     };
 
     // CONSTRUCTORS

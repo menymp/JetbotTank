@@ -4,6 +4,7 @@ project(driver_mpu9250)
 # Find catkin and package dependencies
 find_package(catkin REQUIRED COMPONENTS
   roscpp
+  serial
   sensor_msgs_ext
 )
 
