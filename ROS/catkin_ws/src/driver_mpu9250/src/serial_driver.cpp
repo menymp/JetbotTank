@@ -1,18 +1,23 @@
 #include "serial_driver.h"
+#include <std_msgs/String.h>
+#include <std_msgs/Empty.h>
 
 
-int serial_driver::open_serial(unsigned int i2c_bus, unsigned int i2c_address)
+int serial_driver::open_serial(char * port_path, unsigned int baud_rate, unsigned int timeout)
 {
-    serialObject.setPort("/dev/ttyACM0");
-    serialObject.setBaudrate(9600);
-    serial::Timeout to = serial::Timeout::simpleTimeout(1000);
+    serialObject.setPort(port_path);
+    serialObject.setBaudrate(baud_rate);
+    serial::Timeout to = serial::Timeout::simpleTimeout(timeout);
     serialObject.setTimeout(to);
     serialObject.open();
 }
-
-void serial_driver::serial_read()
+/* sends a read comands and wait for the result */
+std_msgs::String serial_driver::serial_read()
 {
-    return serialObject.readline(result);
+    std_msgs::String received_data;
+    serialObject.write('R');
+    received_data.data = serialObject.readline(result);
+    return received_data;
 }
 
 // METHODS
@@ -21,55 +26,49 @@ void serial_driver::read_data()
     // Create data storage structure.
     driver::data data;
     
-    
-    // Parse out accel data.
-    data.accel_x = driver::m_accel_fsr * static_cast<float>(static_cast<short>(be16toh(*reinterpret_cast<unsigned short*>(&atg_buffer[0])))) / 32768.0f;
-    data.accel_y = driver::m_accel_fsr * static_cast<float>(static_cast<short>(be16toh(*reinterpret_cast<unsigned short*>(&atg_buffer[2])))) / 32768.0f;
-    data.accel_z = driver::m_accel_fsr * static_cast<float>(static_cast<short>(be16toh(*reinterpret_cast<unsigned short*>(&atg_buffer[4])))) / 32768.0f;
-
-    // Parse out gyro data.
-    data.gyro_x = driver::m_gyro_fsr * static_cast<float>(static_cast<short>(be16toh(*reinterpret_cast<unsigned short*>(&atg_buffer[8])))) / 32768.0f;
-    data.gyro_y = driver::m_gyro_fsr * static_cast<float>(static_cast<short>(be16toh(*reinterpret_cast<unsigned short*>(&atg_buffer[10])))) / 32768.0f;
-    data.gyro_z = driver::m_gyro_fsr * static_cast<float>(static_cast<short>(be16toh(*reinterpret_cast<unsigned short*>(&atg_buffer[12])))) / 32768.0f;
-
-    // Store measurements.
-    data.magneto_x = 4900.0f * static_cast<float>(static_cast<short>(le16toh(*reinterpret_cast<unsigned short*>(&magneto_buffer[0])))) / resolution;
-    data.magneto_y = 4900.0f * static_cast<float>(static_cast<short>(le16toh(*reinterpret_cast<unsigned short*>(&magneto_buffer[2])))) / resolution;
-    data.magneto_z = 4900.0f * static_cast<float>(static_cast<short>(le16toh(*reinterpret_cast<unsigned short*>(&magneto_buffer[4])))) / resolution;
-
-    // Read interrupt status register to clear interrupt.
     try
     {
-        read_mpu9250_register(driver::register_mpu9250_type::INT_STATUS);
+        auto buffer = serial_read();
     }
     catch(const std::exception& e)
     {
-        // Quit before callback. Do not report error in loop.
+        return;
+    }
+    auto mpu9250_fields = buffer.data.split(',');
+
+    if (mpu9250_fields[0] != "a/g/m:")
+    {
+        /* no recognized format */
+        return;
+    }
+
+    /* attempts to parse the received data */
+    try
+    {
+        // Parse out accel data.
+        data.accel_x = std::stof(mpu9250_fields[1]);
+        data.accel_y = std::stof(mpu9250_fields[2]);
+        data.accel_z = std::stof(mpu9250_fields[3]);
+
+        // Parse out gyro data.
+        data.gyro_x = std::stof(mpu9250_fields[4]);
+        data.gyro_y = std::stof(mpu9250_fields[5]);
+        data.gyro_z = std::stof(mpu9250_fields[6]);
+
+        // Store measurements.
+        data.magneto_x = std::stof(mpu9250_fields[7]);
+        data.magneto_y = std::stof(mpu9250_fields[8]);
+        data.magneto_z = std::stof(mpu9250_fields[9]);
+    }
+    catch(const std::exception& e)
+    {
         return;
     }
 
     // Initiate the data callback.
     driver::m_data_callback(data);
 }
-void serial_driver::close_serial(int i2c_handle)
+void serial_driver::close_serial()
 {
-    int result = i2c_close(rpi_driver::m_pigpio_handle, static_cast<unsigned int>(i2c_handle));
-    if(result < 0)
-    {
-        switch(result)
-        {
-        case PI_BAD_HANDLE:
-        {
-            std::stringstream message;
-            message << "deinitialize: Specified invalid I2C handle: " << i2c_handle;
-            throw std::runtime_error(message.str());
-        }
-        default:
-        {
-            std::stringstream message;
-            message << "deinitialize: Unknown error: " << result;
-            throw std::runtime_error(message.str());
-        }
-        }
-    }
+    serialObject.close();
 }
