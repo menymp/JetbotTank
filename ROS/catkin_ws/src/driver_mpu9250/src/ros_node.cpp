@@ -24,14 +24,9 @@ ros_node::ros_node(std::shared_ptr<driver> driver, int argc, char **argv)
 
     // Read parameters.
     ros::NodeHandle private_node("~");
-    int param_i2c_bus = private_node.param<int>("i2c_bus", 1);
-    int param_i2c_address = private_node.param<int>("i2c_address", 0x68);
-    int param_interrupt_pin = private_node.param<int>("interrupt_gpio_pin", 0);
-    int param_gyro_dlpf_frequency = private_node.param<int>("gyro_dlpf_frequency", 0);
-    int param_accel_dlpf_frequency = private_node.param<int>("accel_dlpf_frequency", 0);
-    int param_gyro_fsr = private_node.param<int>("gyro_fsr", 0);
-    int param_accel_fsr = private_node.param<int>("accel_fsr", 0);
-    float param_max_data_rate = private_node.param<float>("max_data_rate", 8000.0F);
+    msg::String param_port_path = private_node.param<msg::String>("port_path", "/dev/ttyACM0");
+    unsigned int param_baud_rate = private_node.param<unsigned int>("baud_rate", 115200);
+    unsigned int param_timeout = private_node.param<unsigned int>("timeout", 100);
 
     // Read calibrations.
     ros_node::m_calibration_accelerometer.load(private_node, "calibration/accelerometer");
@@ -49,13 +44,13 @@ ros_node::ros_node(std::shared_ptr<driver> driver, int argc, char **argv)
         // Attach the data callback.
         ros_node::m_driver->set_data_callback(std::bind(&ros_node::data_callback, this, std::placeholders::_1));
         // Initialize driver.
-        ros_node::m_driver->initialize(static_cast<unsigned int>(param_i2c_bus), static_cast<unsigned int>(param_i2c_address), static_cast<unsigned int>(param_interrupt_pin));
+        ros_node::m_driver->initialize(param_port_path.data, param_baud_rate, param_timeout);
         // Set parameters.
         float data_rate = ros_node::m_driver->p_dlpf_frequencies(static_cast<driver::gyro_dlpf_frequency_type>(param_gyro_dlpf_frequency), static_cast<driver::accel_dlpf_frequency_type>(param_accel_dlpf_frequency), param_max_data_rate);
         ros_node::m_driver->p_gyro_fsr(static_cast<driver::gyro_fsr_type>(param_gyro_fsr));
         ros_node::m_driver->p_accel_fsr(static_cast<driver::accel_fsr_type>(param_accel_fsr));
 
-        ROS_INFO_STREAM("mpu9250 driver successfully initialized on i2c bus " << param_i2c_bus << " at address 0x" << std::hex << param_i2c_address);
+        ROS_INFO_STREAM("mpu9250 driver successfully initialized on serial port " << param_port_path.data << " at speed: " << param_baud_rate);
         ROS_INFO_STREAM("sensor data rate is " << data_rate << " hz");
     }
     catch (std::exception& e)

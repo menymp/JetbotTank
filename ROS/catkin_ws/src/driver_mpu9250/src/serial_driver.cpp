@@ -3,7 +3,7 @@
 #include <std_msgs/Empty.h>
 
 
-int serial_driver::open_serial(char * port_path, unsigned int baud_rate, unsigned int timeout)
+int serial_driver::open_serial(std:string port_path, unsigned int baud_rate, unsigned int timeout)
 {
     serialObject.setPort(port_path);
     serialObject.setBaudrate(baud_rate);
