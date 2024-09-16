@@ -27,6 +27,9 @@ public:
     /// \brief spin Runs the node.
     void spin();
 
+    /// \brief performs a read request.
+    void perform_read();
+
 private:
     // COMPONENTS
     /// \brief m_driver The driver instance.

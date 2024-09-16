@@ -1,6 +1,8 @@
+#include "driver.h"
 #include <serial/serial.h>
 #include <std_msgs/String.h>
 #include <std_msgs/Empty.h>
+
 /// \file serial_driver.h
 /// \brief Defines the serial_driver class.
 #ifndef SERIAL_DRIVER_H
@@ -9,7 +11,7 @@
 ///
 /// \brief An MPU9250 driver for an specific serial driver.
 ///
-class serial_driver
+class serial_driver : public driver
 {
 public:
     // CONSTRUCTORS
@@ -48,7 +50,7 @@ private:
     /// \brief serial_read creates a request read for the serial microcontroller and returns the result.
     /// \return the read line with the possible the data.
     ///
-    std_msgs::String serial_driver::serial_read()
+    std:string serial_driver::serial_read();
 
 };
 

@@ -12,11 +12,11 @@ int serial_driver::open_serial(std:string port_path, unsigned int baud_rate, uns
     serialObject.open();
 }
 /* sends a read comands and wait for the result */
-std_msgs::String serial_driver::serial_read()
+std::string serial_driver::serial_read()
 {
-    std_msgs::String received_data;
+    std::string received_data;
     serialObject.write('R');
-    received_data.data = serialObject.readline(result);
+    auto read_cnt = serialObject.readline(received_data, 400, "\n");
     return received_data;
 }
 

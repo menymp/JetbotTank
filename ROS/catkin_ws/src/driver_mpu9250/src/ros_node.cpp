@@ -66,6 +66,12 @@ ros_node::ros_node(std::shared_ptr<driver> driver, int argc, char **argv)
     ros_node::calibrate_gyroscope(500);
 }
 
+// Performs a single read
+void ros_node::perform_read()
+{
+    ros_node::m_driver->read_data();
+}
+
 // ROS
 void ros_node::spin()
 {
