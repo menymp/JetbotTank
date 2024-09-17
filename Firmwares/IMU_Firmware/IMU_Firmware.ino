@@ -5,7 +5,8 @@
 // Changelog:
 //     2011-10-07 - initial release
 //     2013-1-4 - added raw magnetometer output
-
+// menymp
+//     2024-09-16 - implement request response command mode
 /* ============================================
 I2Cdev device library code is placed under the MIT license
 
