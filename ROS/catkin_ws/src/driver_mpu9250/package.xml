@@ -12,9 +12,7 @@
   <buildtool_depend>catkin</buildtool_depend>
   <depend>roscpp</depend>
   <depend>sensor_msgs_ext</depend>
-  <build_depend>serial</build_depend>
-  <build_depend>std_msgs</build_depend>
-  <run_depend>serial</run_depend>
-  <run_depend>std_msgs</run_depend>
+  <depend>serial</build_depend>
+  <depend>std_msgs</build_depend>
 
 </package>
