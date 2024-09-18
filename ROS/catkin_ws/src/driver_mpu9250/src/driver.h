@@ -96,17 +96,17 @@ protected:
     /// \param timeout port read line timeout.
     /// \return A handle to the I2C interface.
     ///
-    virtual void serial_driver::open_serial(char * port_path, unsigned int baud_rate, unsigned int timeout) = 0;
+    virtual void open_serial(std::string port_path, unsigned int baud_rate, unsigned int timeout) = 0;
 
     ///
     /// \brief read_data attempts to read mpu9250 data and returns the parsed result.
     ///
-    virtual void serial_driver::read_data() = 0;
+    virtual void read_data() = 0;
 
     ///
     /// \brief close_serial closes the serial connection for the device communication.
     ///
-    virtual void serial_driver::close_serial() = 0;
+    virtual void close_serial() = 0;
 
 private:
     // FULL SCALE RANGE

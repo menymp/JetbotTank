@@ -8,7 +8,7 @@
 #include <cmath>
 
 // CONSTRUCTORS
-ros_node::ros_node(std::shared_ptr<driver> driver, int argc, char **argv)
+ros_node::ros_node(std::shared_ptr<serial_driver> driver, int argc, char **argv)
 {
     // Initialize flags.
     ros_node::f_gyroscope_calibrating = false;
@@ -24,7 +24,7 @@ ros_node::ros_node(std::shared_ptr<driver> driver, int argc, char **argv)
 
     // Read parameters.
     ros::NodeHandle private_node("~");
-    msg::String param_port_path = private_node.param<msg::String>("port_path", "/dev/ttyACM0");
+    std::string param_port_path = private_node.param<std::string>("port_path", "/dev/ttyACM0");
     unsigned int param_baud_rate = private_node.param<unsigned int>("baud_rate", 115200);
     unsigned int param_timeout = private_node.param<unsigned int>("timeout", 100);
 
@@ -46,9 +46,9 @@ ros_node::ros_node(std::shared_ptr<driver> driver, int argc, char **argv)
         // Initialize driver.
         ros_node::m_driver->initialize(param_port_path.data, param_baud_rate, param_timeout);
         // Set parameters.
-        float data_rate = ros_node::m_driver->p_dlpf_frequencies(static_cast<driver::gyro_dlpf_frequency_type>(param_gyro_dlpf_frequency), static_cast<driver::accel_dlpf_frequency_type>(param_accel_dlpf_frequency), param_max_data_rate);
-        ros_node::m_driver->p_gyro_fsr(static_cast<driver::gyro_fsr_type>(param_gyro_fsr));
-        ros_node::m_driver->p_accel_fsr(static_cast<driver::accel_fsr_type>(param_accel_fsr));
+        //float data_rate = ros_node::m_driver->p_dlpf_frequencies(static_cast<driver::gyro_dlpf_frequency_type>(param_gyro_dlpf_frequency), static_cast<driver::accel_dlpf_frequency_type>(param_accel_dlpf_frequency), param_max_data_rate);
+        //ros_node::m_driver->p_gyro_fsr(static_cast<driver::gyro_fsr_type>(param_gyro_fsr));
+        //ros_node::m_driver->p_accel_fsr(static_cast<driver::accel_fsr_type>(param_accel_fsr));
 
         ROS_INFO_STREAM("mpu9250 driver successfully initialized on serial port " << param_port_path.data << " at speed: " << param_baud_rate);
         ROS_INFO_STREAM("sensor data rate is " << data_rate << " hz");

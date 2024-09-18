@@ -30,17 +30,17 @@ public:
     /// \param timeout port read line timeout.
     /// \return A handle to the I2C interface.
     ///
-    void serial_driver::open_serial(char * port_path, unsigned int baud_rate, unsigned int timeout);
+    void open_serial(std::string port_path, unsigned int baud_rate, unsigned int timeout);
 
     ///
     /// \brief read_data attempts to read mpu9250 data and returns the parsed result.
     ///
-    void serial_driver::read_data();
+    void read_data();
 
     ///
     /// \brief close_serial closes the serial connection for the device communication.
     ///
-    void serial_driver::close_serial();
+    void close_serial();
 private:
 
     // METHODS
@@ -51,7 +51,7 @@ private:
     /// \brief serial_read creates a request read for the serial microcontroller and returns the result.
     /// \return the read line with the possible the data.
     ///
-    std::string serial_driver::serial_read();
+    std::string serial_read();
 
 };
 
