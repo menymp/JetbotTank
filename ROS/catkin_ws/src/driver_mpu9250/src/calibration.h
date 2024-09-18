@@ -6,6 +6,7 @@
 #include <ros/node_handle.h>
 #include <vector>
 #include <eigen3/Eigen/Dense>
+#include <string> // for string class 
 
 /// \brief Performs calibration on 3D points.
 class calibration

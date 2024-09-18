@@ -1,10 +1,11 @@
 #include "driver.h"
-
+#include "serial_driver.h"
 #include <stdexcept>
 #include <sstream>
 #include <unistd.h>
 #include <cmath>
 #include <limits>
+#include <string> // for string class 
 
 /* 
 TODO: MENY Reimplement this driver using the available firmware for arduino pro micro
@@ -28,7 +29,7 @@ void driver::set_data_callback(std::function<void (data)> callback)
 }
 
 // INITIALIZATION
-void driver::initialize(std:string port_path, unsigned int baud_rate, unsigned int timeout)
+void driver::initialize(std::string port_path, unsigned int baud_rate, unsigned int timeout)
 {
     // Initialize I2C:
     open_serial(port_path, baud_rate, timeout);

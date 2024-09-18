@@ -3,7 +3,9 @@
 #ifndef MPU9250_DRIVER_H
 #define MPU9250_DRIVER_H
 
+#include "serial_driver.h"
 #include <functional>
+#include <string> // for string class 
 
 /// \brief The base driver class for the MPU9250.
 class driver
@@ -73,7 +75,7 @@ public:
     /// \param port_path serial port path for the driver.
     /// \param baud_rate baud rate for the driver communication.
     /// \param timeout timeout for the read command.
-    void initialize(std:string port_path, unsigned int baud_rate, unsigned int timeout);
+    void initialize(std::string port_path, unsigned int baud_rate, unsigned int timeout);
     /// \brief Deinitializes the MPU9250.
     void deinitialize();
 

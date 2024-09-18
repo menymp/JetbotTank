@@ -99,6 +99,7 @@ printenv | grep ROS                 #imprime las variables de entornon de ROS
 source /opt/ros/kinetic/setup.bash
 
 Para construir un proyecto existente se utiliza el comando catkin_make
+catkin build <package name>
 
 si el directorio ya contiene un subdirectorio src, colocara un CMakeLists.txt en ./src
 

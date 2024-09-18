@@ -1,9 +1,10 @@
 #include "serial_driver.h"
 #include <std_msgs/String.h>
 #include <std_msgs/Empty.h>
+#include <string> // for string class 
 
 
-int serial_driver::open_serial(std:string port_path, unsigned int baud_rate, unsigned int timeout)
+int serial_driver::open_serial(std::string port_path, unsigned int baud_rate, unsigned int timeout)
 {
     serialObject.setPort(port_path);
     serialObject.setBaudrate(baud_rate);

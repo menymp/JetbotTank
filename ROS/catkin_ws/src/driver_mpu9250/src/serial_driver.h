@@ -2,6 +2,7 @@
 #include <serial/serial.h>
 #include <std_msgs/String.h>
 #include <std_msgs/Empty.h>
+#include <string> // for string class 
 
 /// \file serial_driver.h
 /// \brief Defines the serial_driver class.
@@ -50,7 +51,7 @@ private:
     /// \brief serial_read creates a request read for the serial microcontroller and returns the result.
     /// \return the read line with the possible the data.
     ///
-    std:string serial_driver::serial_read();
+    std::string serial_driver::serial_read();
 
 };
 

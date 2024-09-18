@@ -1,6 +1,7 @@
 #include "calibration.h"
 
 #include <ros/names.h>
+#include <string> // for string class 
 
 // CONSTRUCTORS
 calibration::calibration()
