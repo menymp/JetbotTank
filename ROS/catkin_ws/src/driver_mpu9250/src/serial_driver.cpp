@@ -21,6 +21,16 @@ std::string serial_driver::serial_read()
     return received_data;
 }
 
+serial_driver::serial_driver()
+{
+
+}
+
+serial_driver::~serial_driver()
+{
+
+}
+
 // METHODS
 void serial_driver::read_data()
 {

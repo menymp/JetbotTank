@@ -1,5 +1,4 @@
 #include "driver.h"
-#include "serial_driver.h"
 #include <stdexcept>
 #include <sstream>
 #include <unistd.h>

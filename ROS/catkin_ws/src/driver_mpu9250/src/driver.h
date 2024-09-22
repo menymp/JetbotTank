@@ -3,7 +3,6 @@
 #ifndef MPU9250_DRIVER_H
 #define MPU9250_DRIVER_H
 
-#include "serial_driver.h"
 #include <functional>
 #include <string> // for string class 
 
