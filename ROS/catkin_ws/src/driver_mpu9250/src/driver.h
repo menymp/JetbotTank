@@ -95,7 +95,7 @@ protected:
     ///
     /// \brief read_data attempts to read mpu9250 data and returns the parsed result.
     ///
-    virtual void read_data() = 0;
+    virtual data read_data() = 0;
 
     ///
     /// \brief close_serial closes the serial connection for the device communication.

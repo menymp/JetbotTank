@@ -12,6 +12,7 @@
 #include <atomic>
 #include <deque>
 
+class serial_driver;
 /// \brief Implements the driver's ROS node functionality.
 class ros_node
 {

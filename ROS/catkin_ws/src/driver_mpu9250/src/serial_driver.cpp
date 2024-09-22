@@ -31,6 +31,28 @@ serial_driver::~serial_driver()
 
 }
 
+namespace
+{
+    //TODO: MOVE THIS TO AN UTILITY FILE
+    std::vector<std::string_view> split(std::string_view str, char delim)
+    {
+        std::vector<std::string_view> result; 
+        auto left = str.begin(); 
+        for (auto it = left; it != str.end(); ++it) 
+        { 
+            if (*it == delim) 
+            { 
+                result.emplace_back(&*left, it - left); 
+                left = it + 1; 
+            } 
+        } 
+        if (left != str.end()) 
+            result.emplace_back(&*left, str.end() - left); 
+        return result; 
+    }
+}
+
+
 // METHODS
 driver::data serial_driver::read_data()
 {
@@ -44,14 +66,14 @@ driver::data serial_driver::read_data()
     }
     catch(const std::exception& e)
     {
-        return;
+        return data;
     }
-    auto mpu9250_fields = buffer.data.split(',');
+    auto mpu9250_fields = split(buffer, ',');
 
     if (mpu9250_fields[0] != "a/g/m:")
     {
         /* no recognized format */
-        return;
+        return data;
     }
 
     /* attempts to parse the received data */
@@ -74,7 +96,7 @@ driver::data serial_driver::read_data()
     }
     catch(const std::exception& e)
     {
-        return;
+        return data;
     }
 
     // Initiate the data callback.
