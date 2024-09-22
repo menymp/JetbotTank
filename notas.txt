@@ -284,3 +284,6 @@ Note: new firmware flashed, testing it, fixed info issue
 # MPU9250 Fuse algoritm
 https://github.com/CCNYRoboticsLab/imu_tools
 https://github.com/pcdangio/ros-driver_mpu9250
+
+# vertical stabilizer
+https://www.instructables.com/GoPro-Stabilizer-Project-Arduino-Nano/
