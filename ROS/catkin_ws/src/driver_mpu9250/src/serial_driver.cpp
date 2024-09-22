@@ -4,7 +4,7 @@
 #include <string> // for string class 
 
 
-int serial_driver::open_serial(std::string port_path, unsigned int baud_rate, unsigned int timeout)
+void serial_driver::open_serial(std::string port_path, unsigned int baud_rate, unsigned int timeout)
 {
     serialObject.setPort(port_path);
     serialObject.setBaudrate(baud_rate);
@@ -16,7 +16,7 @@ int serial_driver::open_serial(std::string port_path, unsigned int baud_rate, un
 std::string serial_driver::serial_read()
 {
     std::string received_data;
-    serialObject.write('R');
+    serialObject.write("R");
     auto read_cnt = serialObject.readline(received_data, 400, "\n");
     return received_data;
 }
@@ -32,14 +32,15 @@ serial_driver::~serial_driver()
 }
 
 // METHODS
-void serial_driver::read_data()
+driver::data serial_driver::read_data()
 {
     // Create data storage structure.
     driver::data data;
+    std::string buffer;
     
     try
     {
-        auto buffer = serial_read();
+        buffer = serial_read();
     }
     catch(const std::exception& e)
     {
@@ -77,7 +78,8 @@ void serial_driver::read_data()
     }
 
     // Initiate the data callback.
-    driver::m_data_callback(data);
+    // driver::m_data_callback(data);
+    return data;
 }
 void serial_driver::close_serial()
 {

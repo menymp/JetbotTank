@@ -35,7 +35,7 @@ public:
     ///
     /// \brief read_data attempts to read mpu9250 data and returns the parsed result.
     ///
-    void read_data();
+    driver::data read_data();
 
     ///
     /// \brief close_serial closes the serial connection for the device communication.

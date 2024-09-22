@@ -80,11 +80,6 @@ public:
 
     // PROPERTIES
 
-
-    // METHODS
-    /// \brief Reads all IMU data directly from the MPU9250 and AK8963 and raises the data callback.
-    void read_data();
-
 protected:
 
     // METHODS

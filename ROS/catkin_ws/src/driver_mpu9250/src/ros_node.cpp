@@ -69,7 +69,8 @@ ros_node::ros_node(std::shared_ptr<serial_driver> driver, int argc, char **argv)
 // Performs a single read
 void ros_node::perform_read()
 {
-    ros_node::m_driver->read_data();
+    auto data = ros_node::m_driver->read_data();
+    data_callback(data);
 }
 
 // ROS
