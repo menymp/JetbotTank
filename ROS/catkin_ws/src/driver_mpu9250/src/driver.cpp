@@ -62,9 +62,4 @@ void driver::deinitialize()
     close_serial();
 }
 
-void driver::read_data()
-{
-    
-}
-
 // PROPERTIES
