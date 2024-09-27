@@ -2,6 +2,7 @@
 #include <std_msgs/String.h>
 #include <std_msgs/Empty.h>
 #include <string> // for string class 
+#include <string_view>
 
 
 void serial_driver::open_serial(std::string port_path, unsigned int baud_rate, unsigned int timeout)
