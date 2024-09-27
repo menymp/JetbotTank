@@ -35,9 +35,9 @@ serial_driver::~serial_driver()
 namespace
 {
     //TODO: MOVE THIS TO AN UTILITY FILE
-    std::vector<std::string_view> split(std::string_view str, char delim)
+    std::vector<string_view> split(string_view str, char delim)
     {
-        std::vector<std::string_view> result; 
+        std::vector<string_view> result; 
         auto left = str.begin(); 
         for (auto it = left; it != str.end(); ++it) 
         { 
