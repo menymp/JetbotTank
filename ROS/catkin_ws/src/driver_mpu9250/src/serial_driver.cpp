@@ -3,7 +3,7 @@
 #include <std_msgs/Empty.h>
 #include <string> // for string class
 
-
+/* inits a serial connection with the microcontroller sensor */
 void serial_driver::open_serial(std::string port_path, unsigned int baud_rate, unsigned int timeout)
 {
     serialObject.setPort(port_path);
