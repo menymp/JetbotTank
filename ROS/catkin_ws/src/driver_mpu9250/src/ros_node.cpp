@@ -42,7 +42,7 @@ ros_node::ros_node(std::shared_ptr<serial_driver> driver, int argc, char **argv)
     try
     {
         // Attach the data callback.
-        ros_node::m_driver->set_data_callback(std::bind(&ros_node::data_callback, this, std::placeholders::_1));
+        //ros_node::m_driver->set_data_callback(std::bind(&ros_node::data_callback, this, std::placeholders::_1));
         // Initialize driver.
         ros_node::m_driver->initialize(param_port_path.data, param_baud_rate, param_timeout);
         // Set parameters.

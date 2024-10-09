@@ -31,6 +31,10 @@ public:
     /// \brief performs a read request.
     void perform_read();
 
+    // METHODS
+    /// \brief deinitialize_driver Deinitializes the driver.
+    void deinitialize_driver();
+
 private:
     // COMPONENTS
     /// \brief m_driver The driver instance.
@@ -76,10 +80,6 @@ private:
     /// \param response The service response.
     /// \returns TRUE if the service completed successfully, otherwise FALSE.
     bool service_calibrate_gyroscope(sensor_msgs_ext::calibrate_gyroscopeRequest& request, sensor_msgs_ext::calibrate_gyroscopeResponse& response);
-
-    // METHODS
-    /// \brief deinitialize_driver Deinitializes the driver.
-    void deinitialize_driver();
 
     // CALLBACKS
     /// \brief data_callback The callback function for when new data is available.

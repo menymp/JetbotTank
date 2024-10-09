@@ -67,7 +67,7 @@ public:
     // CONFIGURATION
     /// \brief Attaches a callback to handle data when it becomes available.
     /// \param callback The callback function to execute.
-    void set_data_callback(std::function<void(driver::data)> callback);
+    //void set_data_callback(std::function<void(driver::data)> callback);
 
     // INITIALIZATION
     /// \brief Initializes the MPU9250.
@@ -111,7 +111,7 @@ private:
 
     // CALLBACKS
     /// \brief m_data_callback The callback function to execute when IMU data is read.
-    std::function<void(driver::data)> m_data_callback;
+    //std::function<void(driver::data)> m_data_callback;
 
 };
 

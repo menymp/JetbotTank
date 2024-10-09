@@ -21,11 +21,12 @@ driver::~driver()
 
 }
 
-void driver::set_data_callback(std::function<void (data)> callback)
-{
-    // Store the callback.
-    driver::m_data_callback = callback;
-}
+
+//void driver::set_data_callback(std::function<void (data)> callback)
+//{
+//    // Store the callback.
+//    driver::m_data_callback = callback;
+//}
 
 // INITIALIZATION
 void driver::initialize(std::string port_path, unsigned int baud_rate, unsigned int timeout)
