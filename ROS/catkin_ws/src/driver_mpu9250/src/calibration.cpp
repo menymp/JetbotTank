@@ -18,6 +18,8 @@ void calibration::load(ros::NodeHandle& node_handle, std::string param_name)
 {
     // Try reading the calibration parameter.
     std::vector<double> components;
+    //https://wiki.ros.org/roscpp/Overview/Parameter%20Server#Retrieving_Lists
+    //https://www.reddit.com/r/ROS/comments/xksz7x/get_param_list_to_vector/
     if(!node_handle.getParam(param_name, components))
     {
         // Param not found, quit.
