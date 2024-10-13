@@ -44,14 +44,14 @@ ros_node::ros_node(std::shared_ptr<serial_driver> driver, int argc, char **argv)
         // Attach the data callback.
         //ros_node::m_driver->set_data_callback(std::bind(&ros_node::data_callback, this, std::placeholders::_1));
         // Initialize driver.
-        ros_node::m_driver->initialize(param_port_path.data, param_baud_rate, param_timeout);
+        ros_node::m_driver->initialize(param_port_path, param_baud_rate, param_timeout);
         // Set parameters.
         //float data_rate = ros_node::m_driver->p_dlpf_frequencies(static_cast<driver::gyro_dlpf_frequency_type>(param_gyro_dlpf_frequency), static_cast<driver::accel_dlpf_frequency_type>(param_accel_dlpf_frequency), param_max_data_rate);
         //ros_node::m_driver->p_gyro_fsr(static_cast<driver::gyro_fsr_type>(param_gyro_fsr));
         //ros_node::m_driver->p_accel_fsr(static_cast<driver::accel_fsr_type>(param_accel_fsr));
 
-        ROS_INFO_STREAM("mpu9250 driver successfully initialized on serial port " << param_port_path.data << " at speed: " << param_baud_rate);
-        ROS_INFO_STREAM("sensor data rate is " << data_rate << " hz");
+        ROS_INFO_STREAM("mpu9250 driver successfully initialized on serial port " << param_port_path << " at speed: " << param_baud_rate);
+        // ROS_INFO_STREAM("sensor data rate is " << data_rate << " hz");
     }
     catch (std::exception& e)
     {
@@ -205,7 +205,8 @@ void ros_node::data_callback(driver::data data)
 
     // Create temperature message.
     sensor_msgs_ext::temperature message_temp;
-    message_temp.temperature = static_cast<double>(data.temp);
+    //message_temp.temperature = static_cast<double>(data.temp);
+    message_temp.temperature = static_cast<double>(27.0); // ToDo: implement a way to retrive temp from imu arduino firmware
     // Publish temperature message.
     ros_node::m_publisher_temperature.publish(message_temp);
 }
