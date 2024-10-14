@@ -25,8 +25,8 @@ ros_node::ros_node(std::shared_ptr<serial_driver> driver, int argc, char **argv)
     // Read parameters.
     ros::NodeHandle private_node("~");
     std::string param_port_path = private_node.param<std::string>("port_path", "/dev/ttyACM0");
-    unsigned int param_baud_rate = private_node.param<unsigned int>("baud_rate", 115200);
-    unsigned int param_timeout = private_node.param<unsigned int>("timeout", 100);
+    int param_baud_rate = private_node.param<int>("baud_rate", 115200);
+    int param_timeout = private_node.param<int>("timeout", 100);
 
     // Read calibrations.
     ros_node::m_calibration_accelerometer.load(private_node, "calibration/accelerometer");
