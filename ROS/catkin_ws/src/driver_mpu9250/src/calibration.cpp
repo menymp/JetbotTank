@@ -1,6 +1,7 @@
 #include "calibration.h"
 
 #include <ros/names.h>
+#include <XmlRpcValue.h>
 #include <string> // for string class 
 
 // CONSTRUCTORS
@@ -17,7 +18,9 @@ calibration::calibration()
 void calibration::load(ros::NodeHandle& node_handle, std::string param_name)
 {
     // Try reading the calibration parameter.
-    std::vector<double> components;
+    //std::vector<double> components;
+    XmlRpc::XmlRpcValue components;
+
     //https://wiki.ros.org/roscpp/Overview/Parameter%20Server#Retrieving_Lists
     //https://www.reddit.com/r/ROS/comments/xksz7x/get_param_list_to_vector/
     if(!node_handle.getParam(param_name, components))
@@ -39,7 +42,7 @@ void calibration::load(ros::NodeHandle& node_handle, std::string param_name)
     {
         for(uint32_t j = 0; j < calibration::m_calibration.cols(); ++j)
         {
-            calibration::m_calibration(i,j) = components.at(k++);
+            calibration::m_calibration(i,j) = components[k++];
         }
     }
 
