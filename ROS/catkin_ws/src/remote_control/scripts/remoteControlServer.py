@@ -126,12 +126,9 @@ def taskReadSerialData(serialObj):
 		if serialObj.available():
 			handleIncomingData(serialObj.readLine())
 
-
-
-
 # Encoder characteristics
-STEP_LENGTH = 0.015   #ToDo: measure this with caliper, distance in mts
-TRACK_DISTANCE = 0.20	#ToDo: measure this with caliper, distance in mts
+STEP_LENGTH = 0.01868
+TRACK_DISTANCE = 0.2675
 
 #Global positions
 x_pos = 0.0
