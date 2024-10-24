@@ -136,8 +136,8 @@ int main(void)
   MX_GPIO_Init();
   HAL_STM32_InitPWM();  //pwm init
   HAL_STM32_USB_DEVICE_Init();
-  MX_ADC1_Init();/////////VBAT
-  MX_I2C3_Init();/////////HMC5883L
+  MX_ADC1_Init();// VBAT
+  MX_I2C3_Init();// HMC5883L
   MX_TIM2_Init();
   //MX_TIM4_Init(); DO NOT USE THIS BEFORE InitPWM, otherwise configs are overriden!!!!
   HMC5883L_Init();
