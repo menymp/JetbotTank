@@ -14,7 +14,7 @@ class configsJetBotServerHandler(baseConfigs):
 		self.DEFAULT_CONFIGS_STRUCT = {
 			"host": '',
 			"port": 8990,
-			"portPath": '/dev/ttyACM0',
+			"portPath": '/dev/ttyACM1',
 			"serialTimeout": 0.07,
 			"serialBaudRate": 9600,
 			"maxLen": 50

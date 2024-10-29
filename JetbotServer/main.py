@@ -138,7 +138,7 @@ if __name__ == "__main__":
 
 
 '''
-ser = serial.Serial('/dev/ttyACM0')
+ser = serial.Serial('/dev/ttyACM1')
 time.sleep(2)
 
 HOST = ''

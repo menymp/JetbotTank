@@ -1,5 +1,5 @@
 <launch>
     <node pkg="remote_control" type="remoteControlServer.py" name="command_server" output="screen">
-        <param name="lineParameters" type="string" value="--port=8990 --serialPath=/dev/ttyACM0 --serialTimeout=0.07 --serialBaudRate=9600 --maxLen=50" />
+        <param name="lineParameters" type="string" value="--port=8990 --serialPath=/dev/ttyACM1 --serialTimeout=0.07 --serialBaudRate=9600 --maxLen=50" />
     </node>
 </launch>
