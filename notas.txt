@@ -54,6 +54,17 @@ lista de dispositivos serial
 lsusb
 ls -la /dev/ttyACM*
 
+with the usb change there is
+/dev/ttyACM2   IMU Microcontroller
+/dev/ttyACM1   Motor Driver
+/dev/ttyACM0   LIDAR XV11
+
+#error:
+ros melodic from ._tf2 import * ImportError: dynamic module does not define module export function (PyInit__tf2)
+
+test this discussion
+https://answers.ros.org/question/326226/importerror-dynamic-module-does-not-define-module-export-function-pyinit__tf2/
+
 #ejecutar NEATO xv11
 
 primero seteamos el modo distribuido, esto es, la raspberry correra ROS y
