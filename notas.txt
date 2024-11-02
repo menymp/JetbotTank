@@ -65,6 +65,15 @@ ros melodic from ._tf2 import * ImportError: dynamic module does not define modu
 test this discussion
 https://answers.ros.org/question/326226/importerror-dynamic-module-does-not-define-module-export-function-pyinit__tf2/
 
+remember to change to aarch-64 for jetson nano in this command
+catkin_make --cmake-args \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DPYTHON_EXECUTABLE=/usr/bin/python3 \
+            -DPYTHON_INCLUDE_DIR=/usr/include/python3.6m \
+            -DPYTHON_LIBRARY=/usr/lib/aarch64-linux-gnu/libpython3.6m.so
+
+no luck
+
 #ejecutar NEATO xv11
 
 primero seteamos el modo distribuido, esto es, la raspberry correra ROS y
