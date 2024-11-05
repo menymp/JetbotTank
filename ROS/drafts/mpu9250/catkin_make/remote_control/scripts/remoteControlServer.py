@@ -16,7 +16,7 @@ import signal
 import time
 from threading import Thread, Event
 import math
-# import tf # <---- not supported in melodig
+import tf
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3
 
@@ -137,7 +137,7 @@ actualTheta = 0.0
 last_time = rospy.Time.now()
 
 odom_pub = rospy.Publisher("odom", Odometry, queue_size=50)
-# odom_broadcaster = tf.TransformBroadcaster() # <--- not supported in melodic
+odom_broadcaster = tf.TransformBroadcaster()
 
 def handleIncomingData(data):
 	#calculate oddometry
@@ -190,8 +190,6 @@ def handleIncomingData(data):
 	vth = deltaTheta / dt
 	#convert to odom message and publish
 	# since all odometry is 6DOF we'll need a quaternion created from yaw
-	# tf is not supported by melodic, think in something better
-	'''
 	odom_quat = tf.transformations.quaternion_from_euler(0, 0, newTheta)
 	odom_broadcaster.sendTransform(
         (x_pos, y_pos, 0.),
@@ -215,7 +213,6 @@ def handleIncomingData(data):
 
     # publish the message
 	odom_pub.publish(odom)
-	'''
 
 	last_time = rospy.Time.now()
 	pass
