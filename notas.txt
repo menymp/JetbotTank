@@ -81,6 +81,8 @@ catkin_make --cmake-args \
 no luck TF2 not suported in ros melodic
 and breaks configs
 
+looking for a workarround, maybe tf2 http://wiki.ros.org/tf2
+
 check this, maybe a recompile in the main catkin_make solve the issue
 https://github.com/heuristicus/spot_ros/issues/37
 
