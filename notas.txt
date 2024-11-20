@@ -215,7 +215,7 @@ https://dabit-industries.github.io/turtlebot2-tutorials/14c-OpenCV2_CPP.html
 
 pip install cv-bridge
 rosrun rqt_image_view rqt_image_view
-
+im losing hope hehe
 
 #Use this command instead to run camera
 roslaunch opencv camerav2_320x240.launch enable_raw:=true
