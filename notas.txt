@@ -79,7 +79,7 @@ catkin_make --cmake-args \
             -DPYTHON_LIBRARY=/usr/lib/aarch64-linux-gnu/libpython2.7.so
 
 no luck TF2 not suported in ros melodic
-and breaks configs
+and breaks configs 
 
 looking for a workarround, maybe tf2 http://wiki.ros.org/tf2
 https://answers.ros.org/question/397733/tf2-for-ros-melodic/
