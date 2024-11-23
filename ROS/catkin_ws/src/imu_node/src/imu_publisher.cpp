@@ -20,8 +20,18 @@ struct IMU_DATA
 };
 
 serial::Serial serialObject;
+ros::Publisher m_publisher_accelerometer;
+ros::Publisher m_publisher_gyroscope;
+ros::Publisher m_publisher_magnetometer;
+ros::Publisher m_publisher_temperature;
 
 std::vector<std::string> split(std::string str, char delim);
+void data_publish(IMU_DATA data);
+void open_serial(std::string port_path, unsigned int baud_rate, unsigned int timeout);
+std::string serial_read();
+IMU_DATA read_data();
+void close_serial();
+
 
 int main(int argc, char **argv)
 {
@@ -30,7 +40,11 @@ int main(int argc, char **argv)
 
   ros::NodeHandle n;
 
-  ros::Publisher chatter_pub = n.advertise<std_msgs::String>("imu_9250/data", 1000);
+  // Set up data publishers.
+  ros::Publisher m_publisher_accelerometer = n.advertise<sensor_msgs_ext::accelerometer>("imu_9250/accelerometer", 1);
+  ros::Publisher m_publisher_gyroscope = n.advertise<sensor_msgs_ext::gyroscope>("imu_9250/gyroscope", 1);
+  ros::Publisher m_publisher_magnetometer = n.advertise<sensor_msgs_ext::magnetometer>("imu_9250/magnetometer", 1);
+  ros::Publisher m_publisher_temperature = n.advertise<sensor_msgs_ext::temperature>("imu_9250/temperature", 1);
 
   ros::Rate loop_rate(10);
 
@@ -39,22 +53,9 @@ int main(int argc, char **argv)
   while (ros::ok())
   {
     std_msgs::String msg;
-    serial_read();
     data = read_data();
-
-    std::stringstream ss;
-    ss << "hello world " << count;
-    msg.data = ss.str();
-
-    ROS_INFO("%s", msg.data.c_str());
-
-    /**
-     * The publish() function is how you send messages. The parameter
-     * is the message object. The type of this object must agree with the type
-     * given as a template parameter to the advertise<>() call, as was done
-     * in the constructor above.
-     */
-    chatter_pub.publish(msg);
+    data_publish(data);
+    // ROS_INFO("%s", msg.data.c_str());
 
     ros::spinOnce();
 
@@ -66,7 +67,7 @@ int main(int argc, char **argv)
 }
 
 // CALLBACKS
-void ros_node::data_callback(driver::data data)
+void data_publish(IMU_DATA data)
 {
     // Create accelerometer message.
     sensor_msgs_ext::accelerometer message_accel;
@@ -74,10 +75,10 @@ void ros_node::data_callback(driver::data data)
     message_accel.x = static_cast<double>(data.accel_x) * 9.80665;
     message_accel.y = static_cast<double>(data.accel_y) * 9.80665;
     message_accel.z = static_cast<double>(data.accel_z) * 9.80665;
-    // Apply calibration.
-    ros_node::m_calibration_accelerometer.calibrate(message_accel.x, message_accel.y, message_accel.z);
+    // Apply calibration. TODO Meny
+    // m_calibration_accelerometer.calibrate(message_accel.x, message_accel.y, message_accel.z);
     // Publish message.
-    ros_node::m_publisher_accelerometer.publish(message_accel);
+    m_publisher_accelerometer.publish(message_accel);
 
     // Create gyroscope message.
     sensor_msgs_ext::gyroscope message_gyro;
@@ -85,15 +86,15 @@ void ros_node::data_callback(driver::data data)
     message_gyro.x = static_cast<double>(data.gyro_x) * M_PI / 180.0;
     message_gyro.y = static_cast<double>(data.gyro_y) * M_PI / 180.0;
     message_gyro.z = static_cast<double>(data.gyro_z) * M_PI / 180.0;
-    // If gyroscope calibration is running, add uncalibrate data to window.
-    if(ros_node::f_gyroscope_calibrating)
-    {
-        ros_node::m_gyroscope_calibration_window.push_back({message_gyro.x, message_gyro.y, message_gyro.z});
-    }
-    // Apply calibration.
-    ros_node::m_calibration_gyroscope.calibrate(message_gyro.x, message_gyro.y, message_gyro.z);
+    // If gyroscope calibration is running, add uncalibrate data to window. TODO Meny
+    // if(f_gyroscope_calibrating)
+    // {
+    //    m_gyroscope_calibration_window.push_back({message_gyro.x, message_gyro.y, message_gyro.z});
+    // }
+    // Apply calibration. TODO Meny
+    // m_calibration_gyroscope.calibrate(message_gyro.x, message_gyro.y, message_gyro.z);
     // Publish message.
-    ros_node::m_publisher_gyroscope.publish(message_gyro);
+    m_publisher_gyroscope.publish(message_gyro);
 
     // Check if there was a magneto overflow.
     if(std::isnan(data.magneto_x) == false)
@@ -104,10 +105,10 @@ void ros_node::data_callback(driver::data data)
         message_mag.x = static_cast<double>(data.magneto_x) * 0.000001;
         message_mag.y = static_cast<double>(data.magneto_y) * 0.000001;
         message_mag.z = static_cast<double>(data.magneto_z) * 0.000001;
-        // Apply calibration.
-        ros_node::m_calibration_magnetometer.calibrate(message_mag.x, message_mag.y, message_mag.z);
+        // Apply calibration. TODO Meny
+        // m_calibration_magnetometer.calibrate(message_mag.x, message_mag.y, message_mag.z);
         // Publish message.
-        ros_node::m_publisher_magnetometer.publish(message_mag);
+        m_publisher_magnetometer.publish(message_mag);
     }
 
     // Create temperature message.
@@ -115,7 +116,7 @@ void ros_node::data_callback(driver::data data)
     //message_temp.temperature = static_cast<double>(data.temp);
     message_temp.temperature = static_cast<double>(27.0); // ToDo: implement a way to retrive temp from imu arduino firmware
     // Publish temperature message.
-    ros_node::m_publisher_temperature.publish(message_temp);
+    m_publisher_temperature.publish(message_temp);
 }
 
 void open_serial(std::string port_path, unsigned int baud_rate, unsigned int timeout)
