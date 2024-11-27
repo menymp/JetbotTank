@@ -5,6 +5,7 @@ an IMU9250 coupled to the system with an arduino board
 menymp
 */
 #include "ros/ros.h"
+#include <serial/serial.h>
 #include "std_msgs/String.h"
 #include <std_msgs/Empty.h>
 #include <string> // for string class
