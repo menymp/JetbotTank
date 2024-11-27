@@ -9,6 +9,11 @@ menymp
 #include <std_msgs/Empty.h>
 #include <string> // for string class
 #include <sstream>
+#include <sensor_msgs_ext/accelerometer.h>
+#include <sensor_msgs_ext/gyroscope.h>
+#include <sensor_msgs_ext/magnetometer.h>
+#include <sensor_msgs_ext/temperature.h>
+
 
 /// \brief A structure for storing IMU data.
 struct IMU_DATA
@@ -48,7 +53,7 @@ int main(int argc, char **argv)
 
   ros::Rate loop_rate(10);
 
-  open_serial('/dev/ttyACM0', 9600, 500);
+  open_serial("/dev/ttyACM0", 9600, 500);
 
   while (ros::ok())
   {
