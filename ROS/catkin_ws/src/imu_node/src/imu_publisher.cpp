@@ -154,7 +154,7 @@ IMU_DATA read_data()
     try
     {
         buffer = serial_read();
-        ROS_INFO("%s", buffer);
+        ROS_INFO("%s", buffer.c_str());
     }
     catch(const std::exception& e)
     {
