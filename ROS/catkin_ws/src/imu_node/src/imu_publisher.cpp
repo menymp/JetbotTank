@@ -47,10 +47,10 @@ int main(int argc, char **argv)
   ros::NodeHandle n;
 
   // Set up data publishers.
-  ros::Publisher m_publisher_accelerometer = n.advertise<sensor_msgs_ext::accelerometer>("imu_9250/accelerometer", 1);
-  ros::Publisher m_publisher_gyroscope = n.advertise<sensor_msgs_ext::gyroscope>("imu_9250/gyroscope", 1);
-  ros::Publisher m_publisher_magnetometer = n.advertise<sensor_msgs_ext::magnetometer>("imu_9250/magnetometer", 1);
-  ros::Publisher m_publisher_temperature = n.advertise<sensor_msgs_ext::temperature>("imu_9250/temperature", 1);
+  m_publisher_accelerometer = n.advertise<sensor_msgs_ext::accelerometer>("imu_9250/accelerometer", 1);
+  m_publisher_gyroscope = n.advertise<sensor_msgs_ext::gyroscope>("imu_9250/gyroscope", 1);
+  m_publisher_magnetometer = n.advertise<sensor_msgs_ext::magnetometer>("imu_9250/magnetometer", 1);
+  m_publisher_temperature = n.advertise<sensor_msgs_ext::temperature>("imu_9250/temperature", 1);
 
   ros::Rate loop_rate(10);
 
