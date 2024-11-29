@@ -60,6 +60,7 @@ int main(int argc, char **argv)
   {
     std_msgs::String msg;
     data = read_data();
+    ROS_INFO("PUBLISHER ALIVE");
     data_publish(data);
     // ROS_INFO("%s", msg.data.c_str());
 
