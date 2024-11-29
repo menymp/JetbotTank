@@ -54,7 +54,7 @@ int main(int argc, char **argv)
 
   ros::Rate loop_rate(10);
 
-  open_serial("/dev/ttyACM0", 9600, 500);
+  open_serial("/dev/ttyACM2", 9600, 500);
 
   while (ros::ok())
   {
