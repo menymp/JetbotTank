@@ -60,7 +60,7 @@ int main(int argc, char **argv)
   {
     std_msgs::String msg;
     data = read_data();
-    ROS_INFO("PUBLISHER ALIVE");
+    // ROS_INFO("PUBLISHER ALIVE");
     data_publish(data);
     // ROS_INFO("%s", msg.data.c_str());
 
@@ -154,7 +154,7 @@ IMU_DATA read_data()
     try
     {
         buffer = serial_read();
-        ROS_INFO("%s", buffer.c_str());
+        // ROS_INFO("%s", buffer.c_str());
     }
     catch(const std::exception& e)
     {
